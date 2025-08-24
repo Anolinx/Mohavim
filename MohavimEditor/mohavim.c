@@ -588,7 +588,7 @@ int main() {
             case 27: // ESC
                 restaurar_terminal();
                 printf("\033[2J\033[H");
-                printf("🚪 Saindo do Mohavim...\n");
+                printf("🚪 Saindo...\n");
                 printf("💀 Obrigado por usar o Mohavim!\n");
                 exit(0);
         }
