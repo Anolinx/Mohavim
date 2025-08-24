@@ -494,12 +494,9 @@ void configuracoes() {
     printf("🔧 Versão: Mohavim 7.2-fork\n");
     printf("📅 Baseado em: GNU nano 7.2\n");
     printf("🏠 Linguagem: C (nativo)\n");
-    printf("💀 Logo: ASCII Art Caveira\n");
     printf("🌐 Interface: Português\n");
     printf("⌨️  Navegação: Setas + Atalhos\n");
-    printf("📝 Editor: Funcional e completo\n");
-    printf("✅ Status: Funcionando perfeitamente!\n\n");
-    
+
     printf("Atalhos disponíveis:\n");
     printf("- ↑↓←→: Navegação\n");
     printf("- Ctrl+S: Salvar arquivo\n");  
