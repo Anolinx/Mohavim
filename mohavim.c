@@ -163,7 +163,7 @@ void editor_simples(char* nome_arquivo) {
             }
             
             if (i == cursor) {
-                printf("\033[7m \033[0m"); // Cursor em destaque
+                printf("\033[4m \033[0m"); // Cursor com underline
             }
             
             if (buffer[i] == '\n') {
@@ -177,7 +177,7 @@ void editor_simples(char* nome_arquivo) {
         
         // Se cursor está no final, mostrar ele
         if (cursor >= buffer_len) {
-            printf("\033[7m \033[0m");
+            printf("\033[4m \033[0m");
         }
         
         printf("\n\n================================================================\n");
@@ -346,15 +346,8 @@ void mostrar_lista_arquivos(int selecionado) {
         printf("    📝 [Digite nome do arquivo]\n\n");
     }
     
-    // Mostrar apenas alguns arquivos por vez para não sobrecarregar a tela
-    int inicio = (selecionado > 10) ? selecionado - 10 : 0;
-    int fim = (inicio + 20 < total_arquivos) ? inicio + 20 : total_arquivos;
-    
-    if (inicio > 0) {
-        printf("    ... (%d arquivos anteriores)\n", inicio);
-    }
-    
-    for (int i = inicio; i < fim; i++) {
+    // Mostrar lista de arquivos
+    for (int i = 0; i < total_arquivos; i++) {
         if (i + 1 == selecionado) {
             printf("  ► 📄 %s  ◄\n", arquivos[i]);
         } else {
@@ -362,73 +355,73 @@ void mostrar_lista_arquivos(int selecionado) {
         }
     }
     
-    if (fim < total_arquivos) {
-        printf("    ... (%d arquivos restantes)\n", total_arquivos - fim);
+    if (total_arquivos == 0) {
+        printf("    (Nenhum arquivo encontrado no diretório atual)\n");
     }
-    
-    printf("\n=================================\n");
-    printf("Arquivo %d de %d\n", selecionado, total_arquivos + 1);
 }
 
 void carregar_lista_arquivos() {
     total_arquivos = 0;
     DIR *dir = opendir(".");
+    if (dir == NULL) return;
     
-    if (dir != NULL) {
-        struct dirent *entry;
-        while ((entry = readdir(dir)) != NULL && total_arquivos < 99) {
-            if (entry->d_type == DT_REG) { // Apenas arquivos regulares
-                strcpy(arquivos[total_arquivos], entry->d_name);
-                total_arquivos++;
-            }
+    struct dirent *entrada;
+    while ((entrada = readdir(dir)) != NULL && total_arquivos < 100) {
+        // Filtrar apenas arquivos regulares (não diretórios)
+        if (entrada->d_type == DT_REG) {
+            strcpy(arquivos[total_arquivos], entrada->d_name);
+            total_arquivos++;
         }
-        closedir(dir);
     }
+    closedir(dir);
 }
 
 void abrir_arquivo() {
     carregar_lista_arquivos();
     
-    int opcao_atual = 0;
+    int selecionado = 0;
     int max_opcoes = total_arquivos + 1; // +1 para opção de digitar nome
     
     configurar_terminal();
     
     while (1) {
-        mostrar_lista_arquivos(opcao_atual);
+        mostrar_lista_arquivos(selecionado);
         
         int tecla = ler_tecla();
         
         switch (tecla) {
             case 65: // Seta cima
-                opcao_atual = (opcao_atual - 1 + max_opcoes) % max_opcoes;
+                selecionado = (selecionado - 1 + max_opcoes) % max_opcoes;
                 break;
                 
             case 66: // Seta baixo
-                opcao_atual = (opcao_atual + 1) % max_opcoes;
+                selecionado = (selecionado + 1) % max_opcoes;
                 break;
                 
             case 10: // Enter
-                restaurar_terminal();
-                if (opcao_atual == 0) {
-                    // Opção para digitar nome
+                if (selecionado == 0) {
+                    // Opção de digitar nome manualmente
                     printf("\033[2J\033[H");
-                    printf("📝 DIGITE O NOME DO ARQUIVO\n");
-                    printf("===========================\n");
-                    printf("Nome: ");
+                    printf("📂 ABRIR ARQUIVO\n");
+                    printf("================\n");
+                    printf("Nome do arquivo: ");
                     
                     char nome[256];
+                    restaurar_terminal();
                     if (fgets(nome, sizeof(nome), stdin)) {
                         nome[strcspn(nome, "\n")] = 0;
                         if (strlen(nome) > 0) {
                             editor_simples(nome);
                         }
                     }
+                    return;
                 } else {
                     // Arquivo selecionado da lista
-                    editor_simples(arquivos[opcao_atual - 1]);
+                    restaurar_terminal();
+                    editor_simples(arquivos[selecionado - 1]);
+                    return;
                 }
-                return;
+                break;
                 
             case 27: // ESC
                 restaurar_terminal();
@@ -437,128 +430,133 @@ void abrir_arquivo() {
     }
 }
 
-void buscar_arquivo() {
+void buscar_em_arquivo() {
     printf("\033[2J\033[H");
     printf("🔍 BUSCAR EM ARQUIVO\n");
     printf("====================\n");
     printf("Nome do arquivo: ");
     
-    char nome[256];
+    char nome_arquivo[256];
+    char termo_busca[256];
+    
     restaurar_terminal();
-    if (fgets(nome, sizeof(nome), stdin)) {
-        nome[strcspn(nome, "\n")] = 0;
-        
-        printf("Texto para buscar: ");
-        char busca[256];
-        if (fgets(busca, sizeof(busca), stdin)) {
-            busca[strcspn(busca, "\n")] = 0;
-            
-            FILE* arquivo = fopen(nome, "r");
-            if (arquivo) {
-                char linha[1024];
-                int num_linha = 1;
-                int encontradas = 0;
-                
-                printf("\n🔍 Resultados em '%s':\n", nome);
-                printf("========================\n");
-                
-                while (fgets(linha, sizeof(linha), arquivo)) {
-                    if (strstr(linha, busca)) {
-                        printf("Linha %d: %s", num_linha, linha);
-                        encontradas++;
-                    }
-                    num_linha++;
-                }
-                
-                if (encontradas == 0) {
-                    printf("❌ Texto '%s' não encontrado.\n", busca);
-                } else {
-                    printf("\n✅ %d ocorrência(s) encontrada(s).\n", encontradas);
-                }
-                
-                fclose(arquivo);
-            } else {
-                printf("❌ Erro ao abrir arquivo '%s'\n", nome);
-            }
-        }
+    if (!fgets(nome_arquivo, sizeof(nome_arquivo), stdin)) return;
+    nome_arquivo[strcspn(nome_arquivo, "\n")] = 0;
+    
+    printf("Termo a buscar: ");
+    if (!fgets(termo_busca, sizeof(termo_busca), stdin)) return;
+    termo_busca[strcspn(termo_busca, "\n")] = 0;
+    
+    FILE *arquivo = fopen(nome_arquivo, "r");
+    if (!arquivo) {
+        printf("❌ Erro: Não foi possível abrir o arquivo '%s'\n", nome_arquivo);
+        printf("Pressione Enter para continuar...");
+        getchar();
+        return;
     }
     
+    printf("\n🔍 Resultados da busca por '%s' em '%s':\n", termo_busca, nome_arquivo);
+    printf("================================================\n");
+    
+    char linha[1000];
+    int numero_linha = 1;
+    int encontrados = 0;
+    
+    while (fgets(linha, sizeof(linha), arquivo)) {
+        if (strstr(linha, termo_busca)) {
+            printf("%3d: %s", numero_linha, linha);
+            encontrados++;
+        }
+        numero_linha++;
+    }
+    
+    if (encontrados == 0) {
+        printf("❌ Nenhuma ocorrência encontrada.\n");
+    } else {
+        printf("\n✅ Total de %d linha(s) encontrada(s).\n", encontrados);
+    }
+    
+    fclose(arquivo);
     printf("\nPressione Enter para continuar...");
     getchar();
 }
 
 void configuracoes() {
     printf("\033[2J\033[H");
-    printf("⚙️ CONFIGURAÇÕES MOHAVIM\n");
-    printf("=========================\n");
-    printf("🔧 Versão: Mohavim 7.2-fork\n");
-    printf("📅 Baseado em: GNU nano 7.2\n");
-    printf("🏠 Linguagem: C (nativo)\n");
-    printf("🌐 Interface: Português\n");
-    printf("⌨️  Navegação: Setas + Atalhos\n");
-
-    printf("Atalhos disponíveis:\n");
-    printf("- ↑↓←→: Navegação\n");
-    printf("- Ctrl+S: Salvar arquivo\n");  
-    printf("- Ctrl+Q: Sair do editor\n");
-    printf("- ESC: Voltar ao menu\n");
-    printf("- Enter: Nova linha\n");
-    printf("- Backspace: Deletar\n");
+    printf("⚙️  CONFIGURAÇÕES\n");
+    printf("=================\n");
+    printf("💀 Mohavim - Fork Modernizado do Nano\n");
+    printf("Versão: 1.0\n");
+    printf("Autor: Gabriel A. Matos\n\n");
+    printf("🔧 Funcionalidades:\n");
+    printf("• Editor de texto com sintaxe de navegação melhorada\n");
+    printf("• Numeração de linhas\n");
+    printf("• Indicador de posição do cursor\n");
+    printf("• Sistema de busca integrado\n");
+    printf("• Interface moderna com emojis\n");
+    printf("• Cursor underline para melhor visibilidade\n\n");
+    printf("⌨️  Atalhos principais:\n");
+    printf("• Ctrl+S: Salvar arquivo\n");
+    printf("• Ctrl+Q: Sair do editor\n");
+    printf("• Setas: Navegar pelo texto\n");
+    printf("• ESC: Voltar ao menu principal\n\n");
     
-    printf("\nPressione Enter para voltar...");
     restaurar_terminal();
+    printf("Pressione Enter para voltar ao menu...");
     getchar();
 }
 
 int main() {
-    int opcao_atual = 0;
-    
-    mostrar_logo();
-    printf("\nPressione Enter para continuar...");
-    getchar();
+    int opcao = 0;
     
     configurar_terminal();
     
     while (1) {
-        mostrar_menu(opcao_atual);
+        mostrar_menu(opcao);
         
         int tecla = ler_tecla();
         
         switch (tecla) {
             case 65: // Seta cima
-                opcao_atual = (opcao_atual - 1 + 5) % 5;
+                opcao = (opcao - 1 + 5) % 5;
                 break;
                 
             case 66: // Seta baixo
-                opcao_atual = (opcao_atual + 1) % 5;
+                opcao = (opcao + 1) % 5;
                 break;
                 
             case 10: // Enter
-                restaurar_terminal();
-                
-                switch (opcao_atual) {
-                    case 0: abrir_arquivo(); break;
-                    case 1: novo_arquivo(); break;
-                    case 2: buscar_arquivo(); break;
-                    case 3: configuracoes(); break;
+                switch (opcao) {
+                    case 0:
+                        abrir_arquivo();
+                        configurar_terminal();
+                        break;
+                    case 1:
+                        novo_arquivo();
+                        configurar_terminal();
+                        break;
+                    case 2:
+                        buscar_em_arquivo();
+                        configurar_terminal();
+                        break;
+                    case 3:
+                        configuracoes();
+                        configurar_terminal();
+                        break;
                     case 4:
-                        printf("\033[2J\033[H");
-                        printf("🚪 Saindo do Mohavim...\n");
-                        printf("💀 Obrigado por usar o Mohavim!\n");
+                        restaurar_terminal();
+                        printf("👋 Obrigado por usar o Mohavim!\n");
                         exit(0);
                 }
-                
-                configurar_terminal();
                 break;
                 
             case 27: // ESC
                 restaurar_terminal();
-                printf("\033[2J\033[H");
-                printf("🚪 Saindo do Mohavim...\n");
-                printf("💀 Obrigado por usar o Mohavim!\n");
+                printf("👋 Obrigado por usar o Mohavim!\n");
                 exit(0);
         }
     }
     
     return 0;
 }
+
