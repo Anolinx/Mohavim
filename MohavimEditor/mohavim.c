@@ -159,7 +159,7 @@ void editor_simples(char* nome_arquivo) {
             }
             
             if (i == cursor) {
-                printf("\033[1;47;30m▌\033[0m"); // Cursor moderno em destaque
+                printf("\033[4m \033[0m"); // Cursor com underline
             }
             
             if (buffer[i] == '\n') {
@@ -173,7 +173,7 @@ void editor_simples(char* nome_arquivo) {
         
         // Se cursor está no final, mostrar ele
         if (cursor >= buffer_len) {
-            printf("\033[1;47;30m▌\033[0m");
+            printf("\033[4m \033[0m");
         }
         
         printf("\n\n");
