@@ -41,4 +41,3 @@ A pasta `MohavimEditor/` contém:
 ## ✅ Status
 - Todos os arquivos estão preservados
 - Código fonte acessível nas pastas copiadas
-- Mohavim funcionando perfeitamente
