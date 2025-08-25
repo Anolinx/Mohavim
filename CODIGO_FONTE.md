@@ -13,8 +13,8 @@
 - Contém todos os 16 arquivos .c originais do nano
 - Código fonte completo e original
 - Principais arquivos:
-  - `mohavim.c` - Código principal original (92KB)
-  - `files.c` - Manipulação de arquivos (78KB) 
+  - `mohavim.c` - Código principal original 
+  - `files.c` - Manipulação de arquivos
   - `text.c` - Edição de texto
   - `winio.c` - Interface de janelas
   - `search.c` - Funcionalidades de busca
