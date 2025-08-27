@@ -2,42 +2,26 @@
 
 # Criado por: Gabriel A. Matos
 
-## Arquivos principais agora visíveis:
+## Arquivos principais:
 
 ### 🔥 **mohavim.c**
-- Arquivo principal que modificamos com as melhorias
+- Arquivo principal do editor Mohavim
 - Contém o editor completo e funcional
-- Localização: `./mohavim.c`
+- Interface moderna com menu visual e navegação intuitiva
+- Localização: `./MohavimEditor/mohavim.c`
 
-### 📁 **Pasta codigo_fonte/**
-- Contém todos os 16 arquivos .c originais do nano
-- Código fonte completo e original
-- Principais arquivos:
-  - `mohavim.c` - Código principal original 
-  - `files.c` - Manipulação de arquivos
-  - `text.c` - Edição de texto
-  - `winio.c` - Interface de janelas
-  - `search.c` - Funcionalidades de busca
-  - `color.c` - Colorização de sintaxe
-  - `cut.c` - Cortar/copiar/colar
-  - `move.c` - Movimentação do cursor
-  - `prompt.c` - Prompts e diálogos
-  - `utils.c` - Utilitários
-  - `global.c` - Variáveis globais
-  - `help.c` - Sistema de ajuda
-  - `history.c` - Histórico de comandos
-  - `browser.c` - Navegador de arquivos
-  - `rcfile.c` - Configurações
-  - `chars.c` - Manipulação de caracteres
+## 🏗️ Estrutura do Projeto
+O projeto `MohavimEditor/` contém:
+- `mohavim.c` - Código principal (599 linhas)
+- `configure.ac` - Sistema de configuração
+- `Makefile.am` - Sistema de compilação
+- Sistema de build simplificado
 
-## 🏗️ Estrutura Original Completa
-A pasta `MohavimEditor/` contém:
-- Código fonte completo do nano 7.2
-- Bibliotecas (pasta `lib/`)
-- Documentação (pasta `doc/`)
-- Arquivos de sintaxe (pasta `syntax/`)
-- Sistema de build (Makefile, configure, etc.)
-
-## ✅ Status
-- Todos os arquivos estão preservados
-- Código fonte acessível nas pastas copiadas
+## ✅ Features Implementadas
+- Interface moderna com logo ASCII
+- Menu principal navegável
+- Editor com numeração de linhas
+- Navegação por setas
+- Navegador de arquivos integrado
+- Exclusão segura de arquivos
+- Interface 100% em português
