@@ -4,8 +4,7 @@
 > Editor de texto com interface moderna e minimalista
 > Navegação intuitiva e recursos avançados
 
-==========================================================================================
-
+==========================================================
 ✨ Features
 - Interface moderna com cores e elementos visuais limpos
 - Navegação intuitiva com setas direcionais
@@ -16,11 +15,12 @@
 - Sistema de busca em arquivos
 - Interface 100% em português
 
-==========================================================================================
+==========================================================
 
 🚀 Como usar
 
 Os arquivos de texto recém-criados serão armazenados no diretório atual ao executar o Mohavim.
+
 Por exemplo:
 
 ❯ pwd → /home/usuario/Documents/
@@ -39,7 +39,7 @@ Assim, o arquivo teste.txt será salvo em: /home/usuario/Documents/teste.txt.
 
 A leitura e edição dos arquivos de texto funcionam da mesma maneira.
 
-==========================================================================================
+==========================================================
 
 ⚡ Instalação automática:
 
@@ -54,13 +54,13 @@ Exemplo: chmod +x install.sh
 
 Para executar o script: ./install.sh
 
-===========================================================================================
+==========================================================
 
 📦 Dependências
 - GCC (compilador C)
 - Bibliotecas padrão (termios, dirent)
 
-==========================================================================================
+==========================================================
 
 🎮 Controles
 Navegador de Arquivos:
@@ -69,7 +69,7 @@ Navegador de Arquivos:
 - D : excluir (confirmação SIM)
 - ESC : voltar
 
-==========================================================================================
+==========================================================
 
 Editor de Texto:
 - ↑↓←→ : navegação
@@ -79,7 +79,7 @@ Editor de Texto:
 - Enter : nova linha
 - Backspace : apagar
 
-==========================================================================================
+==========================================================
 
 📂 Estrutura
 
@@ -88,7 +88,7 @@ Makefile    → sistema de compilação
 README.md   → documentação
 LICENSE     → licença
 
-==========================================================================================
+==========================================================
 
 Uso ⌨️
 
@@ -102,7 +102,7 @@ No seletor de arquivos: Pressione D para excluir arquivo (requer confirmação d
 
 No editor: Ctrl+S para salvar, Ctrl+Q para sair, ESC para voltar ao menu
 
-==========================================================================================
+==========================================================
 
 Contribuição
 
@@ -110,13 +110,13 @@ Quer contribuir com o Mohavim?
 
 Me contate em: gabriellramone@gmail.com
 
-==========================================================================================
+==========================================================
 
 Mohavim é distribuído sob a licença GNU GPLv3.  
 
 Consulte o arquivo LICENSE para mais detalhes.
 
-===========================================================================================
+==========================================================
 
 🛰️ Versão:
 Mohavim 7.2 🔥
