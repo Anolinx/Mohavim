@@ -4,11 +4,6 @@
 
 echo "=== Instalando Mohavim ==="
 
-# Verificar se o make está disponível
-if ! command -v make &> /dev/null; then
-    echo "Erro: 'make' não encontrado. Instale build-essential ou equivalent."
-    exit 1
-fi
 
 # Verificar se o gcc está disponível
 if ! command -v gcc &> /dev/null; then
@@ -19,8 +14,7 @@ fi
 # Compilar o projeto
 echo "Compilando Mohavim..."
 cd MohavimEditor/
-make clean
-make
+gcc -Wall -O2 -o mohavim mohavim.c
 
 if [ $? -eq 0 ]; then
     echo "Compilação bem-sucedida!"
