@@ -12,7 +12,7 @@
 
 ## 🏗️ Estrutura do Projeto
 O projeto `MohavimEditor/` contém:
-- `mohavim.c` - Código principal (599 linhas)
+- `mohavim.c` - Código principal (594 linhas)
 - `configure.ac` - Sistema de configuração
 - `Makefile.am` - Sistema de compilação
 - Sistema de build simplificado
