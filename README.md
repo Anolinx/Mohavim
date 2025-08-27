@@ -1,8 +1,8 @@
- ⚡ Mohavim — Editor de Texto Modernizado ⚡
+               ⚡ Mohavim  ⚡
          criado por: Gabriel A. Matos
 
-> Um fork moderno e estilizado do GNU nano 7.2
-> Interface moderna e minimalista
+> Editor de texto com interface moderna e minimalista
+> Navegação intuitiva e recursos avançados
 
 ==========================================================================================
 
@@ -59,7 +59,6 @@ Para executar o script: ./install.sh
 📦 Dependências
 - GCC (compilador C)
 - Bibliotecas padrão (termios, dirent)
-- Make
 
 ==========================================================================================
 
@@ -84,15 +83,10 @@ Editor de Texto:
 
 📂 Estrutura
 
-mohavim.c   → núcleo modificado
-
-src/        → código fonte do nano
-
-lib/        → libs auxiliares
-
-syntax/     → sintaxes
-
-doc/        → documentação
+mohavim.c   → núcleo principal do editor
+Makefile    → sistema de compilação
+README.md   → documentação
+LICENSE     → licença
 
 ==========================================================================================
 
@@ -114,7 +108,7 @@ Contribuição
 
 Quer contribuir com o Mohavim?  
 
-Me contate em:
+Me contate em: gabriellramone@gmail.com
 
 ==========================================================================================
 
@@ -125,4 +119,4 @@ Consulte o arquivo LICENSE para mais detalhes.
 ===========================================================================================
 
 🛰️ Versão:
-Mohavim 7.2-fork baseado no GNU nano 7.2 🔥
+Mohavim 7.2 🔥
