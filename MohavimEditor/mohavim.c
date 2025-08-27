@@ -1,14 +1,11 @@
 /**************************************************************************
- *   mohavim.c  --  Um fork modernizado do nano                           *
+ *   mohavim.c  --  Um editor de texto modernizado o                      *
  *                                                                        *
  *   Copyright (C) 2024 Projeto Mohavim                                   *
- *   Baseado no GNU nano 7.2                                             *
  *                                                                        *
- *   Este programa é software livre; você pode redistribuí-lo e/ou       *
- *   modificá-lo sob os termos da Licença Pública Geral GNU conforme     *
- *   publicada pela Free Software Foundation.                            *
- *                                                                        *
- *   Mohavim é um fork modernizado do nano com interface melhorada       *
+ *   Este programa é software livre; você pode redistribuí-lo e/ou        *
+ *   modificá-lo sob os termos da Licença Pública Geral GNU conforme      *
+ *   publicada pela Free Software Foundation.                             *
  *                                                                        *
  **************************************************************************/
 
@@ -26,7 +23,7 @@ int total_arquivos = 0;
 struct termios old_termios;
 
 void limpar_tela() {
-    // Método mais compatível para limpar tela
+    // Limpar tela
     system("clear");
 }
 
@@ -525,8 +522,7 @@ void buscar_arquivo() {
 void sobre() {
     printf("\033[2J\033[H");
     printf("\033[1;36mℹ️  SOBRE O MOHAVIM\033[0m\n\n");
-    printf("🔧 Versão: Mohavim 7.2-fork\n");
-    printf("📅 Baseado em: GNU nano 7.2\n");
+    printf("🔧 Versão: Mohavim 7.2\n");
     printf("🏠 Linguagem: C (nativo)\n");
     printf("🌐 Interface: Português\n");
     printf("⌨️  Navegação: Setas + Atalhos\n");
@@ -577,7 +573,7 @@ int main() {
                     case 3: sobre(); break;
                     case 4:
                         printf("\033[2J\033[H");
-                        printf("🚪 Saindo do Mohavim...\n");
+                        printf("🚪 Saindo...\n");
                         printf("💀 Obrigado por usar o Mohavim!\n");
                         exit(0);
                 }
