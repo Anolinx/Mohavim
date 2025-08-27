@@ -1,7 +1,6 @@
 # Configuration for Mohavim - a modernized text editor
 #
 # Copyright (C) 2025 Gabriel A. Matos
-# Based on GNU nano 7.2
 #
 # Mohavim is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published
