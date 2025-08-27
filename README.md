@@ -5,6 +5,7 @@
 > Navegação intuitiva e recursos avançados
 
 ==========================================================
+
 ✨ Features
 - Interface moderna com cores e elementos visuais limpos
 - Navegação intuitiva com setas direcionais
