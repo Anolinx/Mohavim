@@ -270,8 +270,8 @@ void mostrar_logo() {
     printf("▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\\n");
     printf("▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\\n");
     printf("\\n");
-    printf("              💀 MOHAVIM - Fork Modernizado do Nano 💀\\n");
-    printf("          Um fork modernizado com interface melhorada\\n");
+    printf("              💀 MOHAVIM\\n");
+    printf("         
     printf("============================================================\\n");
 }
 
