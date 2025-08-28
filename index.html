@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohavim - Editor de Texto Modernizado</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <pre class="ascii-logo">
+▗▖  ▗▖ ▗▄▖ ▗▖ ▗▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖
+▐▛▚▞▜▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌  ▐▌  █  ▐▛▚▞▜▌
+▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌
+▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌
+                </pre>
+                <h1>💀 MOHAVIM - Fork Modernizado do Nano 💀</h1>
+                <p>Um fork modernizado com arquitetura modular</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="tab-button active" data-tab="overview">
+                <i class="fas fa-home"></i> Visão Geral
+            </button>
+            <button class="tab-button" data-tab="editor">
+                <i class="fas fa-edit"></i> Editor Web
+            </button>
+            <button class="tab-button" data-tab="source">
+                <i class="fas fa-code"></i> Código Fonte
+            </button>
+            <button class="tab-button" data-tab="install">
+                <i class="fas fa-download"></i> Instalação
+            </button>
+            <button class="tab-button" data-tab="about">
+                <i class="fas fa-info-circle"></i> Sobre
+            </button>
+        </nav>
+
+        <!-- Tab Contents -->
+        <div class="tab-content">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-pane active">
+                <div class="section">
+                    <h2><i class="fas fa-star"></i> Features Principais</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-palette"></i>
+                            <h3>Interface Moderna</h3>
+                            <p>Cores e elementos visuais limpos com navegação intuitiva</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-keyboard"></i>
+                            <h3>Navegação Intuitiva</h3>
+                            <p>Controle total com setas direcionais e atalhos de teclado</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-list-ol"></i>
+                            <h3>Numeração de Linhas</h3>
+                            <p>Editor com numeração automática e cursor visual destacado</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-search"></i>
+                            <h3>Sistema de Busca</h3>
+                            <p>Busca avançada em arquivos com interface amigável</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-folder-open"></i>
+                            <h3>Gerenciador de Arquivos</h3>
+                            <p>Navegação e seleção de arquivos no diretório atual</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Exclusão Segura</h3>
+                            <p>Exclusão de arquivos com confirmação de segurança</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-sitemap"></i>
+                            <h3>Arquitetura Modular</h3>
+                            <p>Código organizado em módulos para melhor manutenibilidade</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2><i class="fas fa-gamepad"></i> Controles</h2>
+                    <div class="controls-grid">
+                        <div class="control-group">
+                            <h3>Navegador de Arquivos</h3>
+                            <ul>
+                                <li><kbd>↑↓</kbd> Navegar</li>
+                                <li><kbd>Enter</kbd> Abrir arquivo</li>
+                                <li><kbd>D</kbd> Excluir (confirmação SIM)</li>
+                                <li><kbd>ESC</kbd> Voltar</li>
+                            </ul>
+                        </div>
+                        <div class="control-group">
+                            <h3>Editor de Texto</h3>
+                            <ul>
+                                <li><kbd>↑↓←→</kbd> Navegação</li>
+                                <li><kbd>Ctrl+S</kbd> Salvar</li>
+                                <li><kbd>Ctrl+Q</kbd> Sair</li>
+                                <li><kbd>ESC</kbd> Voltar</li>
+                                <li><kbd>Enter</kbd> Nova linha</li>
+                                <li><kbd>Backspace</kbd> Apagar</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Editor Tab -->
+            <div id="editor" class="tab-pane">
+                <div class="section">
+                    <h2><i class="fas fa-edit"></i> Editor Web Demo</h2>
+                    <div class="editor-container">
+                        <div class="editor-toolbar">
+                            <button id="new-file" class="btn btn-primary">
+                                <i class="fas fa-file"></i> Novo Arquivo
+                            </button>
+                            <button id="save-file" class="btn btn-success">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                            <input type="file" id="load-file" style="display: none;" accept=".txt,.md,.c,.js,.html,.css">
+                            <button id="load-file-btn" class="btn btn-info">
+                                <i class="fas fa-folder-open"></i> Carregar Arquivo
+                            </button>
+                            <span class="file-info">
+                                <span id="current-file">sem_titulo.txt</span>
+                                <span id="file-status" class="status-saved">Salvo</span>
+                            </span>
+                        </div>
+                        <div class="editor-wrapper">
+                            <div class="line-numbers" id="line-numbers">1</div>
+                            <textarea id="text-editor" placeholder="Digite seu texto aqui...
+Controles:
+- Ctrl+S para salvar
+- Ctrl+N para novo arquivo
+- Ctrl+O para abrir arquivo
+
+Este é um editor web que simula a experiência do Mohavim original."></textarea>
+                        </div>
+                        <div class="editor-status">
+                            <span>Linha: <span id="current-line">1</span></span>
+                            <span>Coluna: <span id="current-column">1</span></span>
+                            <span>Total: <span id="total-chars">0</span> chars</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Source Code Tab -->
+            <div id="source" class="tab-pane">
+                <div class="section">
+                    <h2><i class="fas fa-code"></i> Código Fonte</h2>
+                    <div class="source-files">
+                        <div class="file-browser">
+                            <h3>Arquivos do Projeto</h3>
+                            <div class="file-list">
+                                <div class="file-item" data-file="src/main.c">
+                                    <i class="fas fa-file-code"></i> src/main.c
+                                    <span class="file-size">Programa principal</span>
+                                </div>
+                                <div class="file-item" data-file="src/editor.c">
+                                    <i class="fas fa-file-code"></i> src/editor.c
+                                    <span class="file-size">Motor do editor</span>
+                                </div>
+                                <div class="file-item" data-file="src/ui.c">
+                                    <i class="fas fa-file-code"></i> src/ui.c
+                                    <span class="file-size">Interface de usuário</span>
+                                </div>
+                                <div class="file-item" data-file="src/files.c">
+                                    <i class="fas fa-file-code"></i> src/files.c
+                                    <span class="file-size">Gerenciamento de arquivos</span>
+                                </div>
+                                <div class="file-item" data-file="src/Makefile">
+                                    <i class="fas fa-file-alt"></i> src/Makefile
+                                    <span class="file-size">Sistema de compilação</span>
+                                </div>
+                                <div class="file-item" data-file="install.sh">
+                                    <i class="fas fa-file-alt"></i> install.sh
+                                    <span class="file-size">Script de instalação</span>
+                                </div>
+                                <div class="file-item" data-file="README.md">
+                                    <i class="fas fa-file-alt"></i> README.md
+                                    <span class="file-size">Documentação</span>
+                                </div>
+                                <div class="file-item" data-file="CODIGO_FONTE.md">
+                                    <i class="fas fa-file-alt"></i> CODIGO_FONTE.md
+                                    <span class="file-size">Documentação técnica</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="source-viewer">
+                            <pre id="source-content"><code>Selecione um arquivo para visualizar seu conteúdo.</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Installation Tab -->
+            <div id="install" class="tab-pane">
+                <div class="section">
+                    <h2><i class="fas fa-download"></i> Instalação</h2>
+                    
+                    <div class="install-methods">
+                        <div class="install-method">
+                            <h3><i class="fas fa-magic"></i> Instalação Automática</h3>
+                            <div class="code-block">
+                                <code>
+# Clone o repositório<br>
+git clone https://github.com/Anolinx/Mohavim<br>
+cd Mohavim/<br><br>
+
+# Dar permissão de execução<br>
+chmod +x install.sh<br><br>
+
+# Executar instalação<br>
+./install.sh
+                                </code>
+                            </div>
+                        </div>
+
+                        <div class="install-method">
+                            <h3><i class="fas fa-cog"></i> Compilação Manual</h3>
+                            <div class="code-block">
+                                <code>
+# Entrar na pasta do código fonte<br>
+cd src/<br><br>
+
+# Limpar compilação anterior<br>
+make clean<br><br>
+
+# Compilar o projeto<br>
+make<br><br>
+
+# Executar localmente<br>
+./mohavim<br><br>
+
+# Ou instalar no sistema<br>
+sudo cp mohavim /usr/local/bin/<br>
+sudo chmod +x /usr/local/bin/mohavim
+                                </code>
+                            </div>
+                        </div>
+
+                        <div class="install-method">
+                            <h3><i class="fas fa-box"></i> Dependências</h3>
+                            <ul>
+                                <li><strong>GCC</strong> - Compilador C</li>
+                                <li><strong>Make</strong> - Sistema de build</li>
+                                <li><strong>libc</strong> - Biblioteca padrão C</li>
+                                <li><strong>termios</strong> - Controle de terminal</li>
+                                <li><strong>dirent</strong> - Navegação de diretórios</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="usage-guide">
+                        <h3><i class="fas fa-play"></i> Como Usar</h3>
+                        <ol>
+                            <li>Entre na pasta: <code>cd src/</code></li>
+                            <li>Execute <code>./mohavim</code> no terminal</li>
+                            <li>Use as setas ↑/↓ para navegar no menu</li>
+                            <li>Pressione Enter para selecionar opções</li>
+                            <li>No editor: Ctrl+S para salvar, Ctrl+Q para sair</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about" class="tab-pane">
+                <div class="section">
+                    <h2><i class="fas fa-info-circle"></i> Sobre o Mohavim</h2>
+                    <div class="about-content">
+                        <div class="about-card">
+                            <h3><i class="fas fa-user"></i> Criador</h3>
+                            <p><strong>Gabriel A. Matos</strong></p>
+                            <p>Email: gabriellramone@gmail.com</p>
+                        </div>
+
+                        <div class="about-card">
+                            <h3><i class="fas fa-tag"></i> Versão</h3>
+                            <p><strong>Mohavim 7.2</strong></p>
+                            <p>Fork modernizado com arquitetura modular</p>
+                        </div>
+
+                        <div class="about-card">
+                            <h3><i class="fas fa-balance-scale"></i> Licença</h3>
+                            <p><strong>GNU GPL v3</strong></p>
+                            <p>Software livre e de código aberto</p>
+                        </div>
+
+                        <div class="about-card">
+                            <h3><i class="fas fa-calendar"></i> Copyright</h3>
+                            <p><strong>© 2025 Projeto Mohavim</strong></p>
+                            <p>Todos os direitos reservados</p>
+                        </div>
+                    </div>
+
+                    <div class="contribution">
+                        <h3><i class="fas fa-hands-helping"></i> Contribuição</h3>
+                        <p>Quer contribuir com o Mohavim? Entre em contato!</p>
+                        <p>Este projeto está sob desenvolvimento ativo e aceita contribuições da comunidade.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
