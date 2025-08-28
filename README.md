@@ -3,7 +3,9 @@
          Email: gabriellramone@gmail.com
 
 > Editor de texto com interface moderna e arquitetura modular
+
 > Navegação intuitiva e recursos avançados
+
 > Código organizado em módulos para melhor manutenibilidade
 
 ✨ Features
