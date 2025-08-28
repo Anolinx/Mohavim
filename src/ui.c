@@ -39,8 +39,8 @@ void mostrar_logo() {
     printf("▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\n");
     printf("▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\n");
     printf("\n");
-    printf("              💀 MOHAVIM - Fork Modernizado do Nano 💀\n");
-    printf("          Um fork modernizado com interface melhorada\n");
+    printf("            
+    printf("          Desenvolvido por: Gabriel A. Matos\n");
     printf("============================================================\n");
 }
 void mostrar_menu(int opcao) {
@@ -66,6 +66,7 @@ void mostrar_menu(int opcao) {
     
     printf("\nNavegue: \033[33m↑/↓\033[0m  Selecionar: \033[33mEnter\033[0m  Sair: \033[33mESC\033[0m\n");
 }
+
 void sobre() {
     printf("\033[2J\033[H");
     printf("\033[1;36mℹ️  SOBRE O MOHAVIM\033[0m\n\n");
