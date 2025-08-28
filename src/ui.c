@@ -33,14 +33,14 @@ int ler_tecla() {
     return ch;
 }
 void mostrar_logo() {
-    printf("============================================================\n");
+    printf("=============================================\n");
     printf("▗▖  ▗▖ ▗▄▖ ▗▖ ▗▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖\n");
     printf("▐▛▚▞▜▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌  ▐▌  █  ▐▛▚▞▜▌\n");
     printf("▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\n");
     printf("▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\n");
     printf("\n");
-    printf("         Desenvolvido por: Gabriel A. Matos\n");
-    printf("============================================================\n");
+    printf("Desenvolvido por: Gabriel A. Matos\n");
+    printf("=============================================\n");
 }
 void mostrar_menu(int opcao) {
     limpar_tela();
@@ -86,4 +86,5 @@ void sobre() {
     restaurar_terminal();
     getchar();
 }
+
 
