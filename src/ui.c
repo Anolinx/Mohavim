@@ -39,8 +39,7 @@ void mostrar_logo() {
     printf("▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\n");
     printf("▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\n");
     printf("\n");
-    printf("            
-    printf("          Desenvolvido por: Gabriel A. Matos\n");
+    printf("         Desenvolvido por: Gabriel A. Matos\n");
     printf("============================================================\n");
 }
 void mostrar_menu(int opcao) {
@@ -87,3 +86,4 @@ void sobre() {
     restaurar_terminal();
     getchar();
 }
+
