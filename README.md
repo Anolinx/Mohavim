@@ -114,20 +114,6 @@ CODIGO_FONTE.md → documentação técnica
 LICENSE         → licença
 install.sh      → script de instalação
 
-
-Uso ⌨️
-
-Execute cd src/ && ./mohavim
-
-Use as setas ↑/↓ para navegar no menu
-
-Pressione Enter para selecionar opções
-
-No seletor de arquivos: Pressione D para excluir arquivo (requer confirmação digitando SIM)
-
-No editor: Ctrl+S para salvar, Ctrl+Q para sair, ESC para voltar ao menu
-
-
 Contribuição
 
 Quer contribuir com o Mohavim?  
