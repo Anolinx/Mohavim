@@ -20,6 +20,63 @@
 ⚡ Performance otimizada em C
 🗂️ Arquitetura modular para melhor organização
 
+🚀 Roadmap de Futuras Funcionalidades
+
+O Mohavim ainda está em estágio inicial, mas estas são as próximas melhorias planejadas:
+
+Idiomas (i18n)
+
+Suporte a múltiplos idiomas (ex: Português, Inglês).
+
+Arquivos de tradução externos para facilitar colaboração.
+
+Temas
+
+Suporte a temas claros/escuros.
+
+Configuração customizada de cores via arquivo.
+
+Logs internos
+
+Visualizar logs diretamente no editor.
+
+Nível de detalhe configurável (verbose ON/OFF).
+
+Verbose mode
+
+Parâmetro --verbose para ativar logs detalhados.
+
+Útil para debug e contribuições.
+
+Plugins
+
+Suporte a módulos externos criados pelo usuário.
+
+Carregamento dinâmico de plugins (.so).
+
+API simples para estender o editor.
+
+Configurações persistentes
+
+Arquivo ~/.mohavimrc para salvar idioma, tema e preferências.
+
+Qualidade de vida
+
+Melhorar interface de menus.
+
+Otimizar atalhos e navegação.
+
+Reduzir bugs conhecidos.
+
+- [x] Abrir arquivos
+- [x] Salvar arquivos
+- [ ] Idiomas (i18n)
+- [ ] Temas
+- [ ] Logs internos
+- [ ] Verbose mode
+- [ ] Plugins
+- [ ] Configurações persistentes
+
 🚀 Como usar
 
 Os arquivos de texto recém-criados serão armazenados no diretório atual ao executar o Mohavim.
