@@ -54,6 +54,39 @@ body {
     font-size: 1.1rem;
 }
 
+/* Version Badge */
+.version-badge {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.new-badge {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
+}
+
+.version-text {
+    color: #00ff88;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
 /* Navigation */
 .nav-tabs {
     display: flex;
@@ -126,6 +159,27 @@ body {
     font-size: 1.5rem;
 }
 
+/* Highlight Banner */
+.highlight-banner {
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(0, 255, 136, 0.1));
+    border: 2px solid rgba(255, 107, 107, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.highlight-banner h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+.highlight-banner p {
+    color: #a0a0a0;
+    font-size: 1.1rem;
+}
+
 /* Features Grid */
 .features-grid {
     display: grid;
@@ -141,6 +195,11 @@ body {
     text-align: center;
     transition: transform 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-card.highlight {
+    border: 2px solid rgba(0, 255, 136, 0.3);
+    background: rgba(0, 255, 136, 0.05);
 }
 
 .feature-card:hover {
@@ -163,6 +222,68 @@ body {
 .feature-card p {
     color: #a0a0a0;
     font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.feature-usage {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+}
+
+.feature-usage code {
+    color: #00ff88;
+}
+
+/* Command Examples */
+.command-examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.command-block h4 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Feature Details */
+.feature-detail {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-left: 4px solid #00ff88;
+}
+
+.feature-detail h3 {
+    color: #00ff88;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.feature-detail h4 {
+    color: #ff6b6b;
+    margin: 20px 0 10px 0;
+}
+
+.feature-detail ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-detail li {
+    margin-bottom: 8px;
+    color: #a0a0a0;
+    padding-left: 20px;
 }
 
 /* Controls Grid */
@@ -186,6 +307,14 @@ body {
 .control-group li {
     margin-bottom: 8px;
     color: #a0a0a0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.new-feature {
+    color: #00ff88 !important;
+    font-weight: bold;
 }
 
 kbd {
@@ -196,6 +325,17 @@ kbd {
     font-family: 'Courier New', monospace;
     font-size: 0.8rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+kbd.new {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    color: white;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
+    to { box-shadow: 0 0 15px rgba(255, 107, 107, 0.8); }
 }
 
 /* Editor */
@@ -320,6 +460,12 @@ kbd {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+}
+
+.file-item.new-file {
+    border-left: 3px solid #00ff88;
+    background: rgba(0, 255, 136, 0.05);
 }
 
 .file-item:hover {
@@ -419,6 +565,11 @@ kbd {
     color: #a0a0a0;
 }
 
+.usage-guide ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
 .usage-guide code {
     background: rgba(0, 0, 0, 0.3);
     color: #00ff88;
@@ -443,6 +594,11 @@ kbd {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.about-card.highlight {
+    border: 2px solid rgba(0, 255, 136, 0.3);
+    background: rgba(0, 255, 136, 0.05);
+}
+
 .about-card h3 {
     color: #00ff88;
     margin-bottom: 10px;
@@ -459,6 +615,61 @@ kbd {
 
 .about-card strong {
     color: #ffffff;
+}
+
+/* Changelog */
+.changelog {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.changelog h3 {
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.changelog-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.changelog-item {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #00ff88;
+}
+
+.changelog-item h4 {
+    color: #00ff88;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.changelog-item ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.changelog-item li {
+    color: #a0a0a0;
+    margin-bottom: 5px;
+    padding-left: 15px;
+    position: relative;
+}
+
+.changelog-item li:before {
+    content: "✓";
+    color: #00ff88;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
 }
 
 .contribution {
@@ -480,6 +691,20 @@ kbd {
 .contribution p {
     color: #a0a0a0;
     margin-bottom: 10px;
+}
+
+.contribution ul {
+    list-style: none;
+    text-align: left;
+    max-width: 400px;
+    margin: 15px auto;
+}
+
+.contribution li {
+    color: #a0a0a0;
+    margin-bottom: 8px;
+    padding-left: 25px;
+    position: relative;
 }
 
 /* Responsive */
@@ -526,6 +751,14 @@ kbd {
         grid-template-columns: 1fr;
     }
     
+    .command-examples {
+        grid-template-columns: 1fr;
+    }
+    
+    .changelog-content {
+        grid-template-columns: 1fr;
+    }
+    
     .editor-toolbar {
         flex-direction: column;
         align-items: flex-start;
@@ -552,5 +785,10 @@ kbd {
     
     .section {
         padding: 20px;
+    }
+    
+    .version-badge {
+        flex-direction: column;
+        gap: 5px;
     }
 }
