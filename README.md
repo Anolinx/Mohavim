@@ -1,14 +1,47 @@
-                 ⚡ Mohavim  ⚡
+
+                 ⚡ Mohavim ⚡
          criado por: Gabriel A. Matos
          Email: gabriellramone@gmail.com
 
-> Editor de texto com interface moderna e arquitetura modular
+> Editor de texto com interface moderna, com sistema completo de internacionalização e temas
 
 > Navegação intuitiva e recursos avançados
 
-> Código organizado em módulos para melhor manutenibilidade
+> Arquitetura modular para melhor manutenibilidade, com sistema de plugins e logs
+
+> Interface multilíngue e customizável para máxima produtividade
 
 ✨ Features
+
+🌐 **Sistema de Internacionalização (i18n)**
+  - Suporte completo a múltiplos idiomas
+  - Português e Inglês incluídos
+  - Fácil adição de novos idiomas
+
+📂 **Seleção de arquivos no diretório atual**
+
+   - Os arquivos de texto recém-criados serão armazenados no diretório atual ao executar o Mohavim.
+   - A leitura e edição dos arquivos de texto funcionam da mesma maneira.
+  
+🎨 **Sistema de Temas**
+  - Temas escuro, claro e cyberpunk
+  - Esquemas de cores personalizáveis
+  - Mudança dinâmica de tema
+
+📋 **Sistema de Logs Interno**
+  - Logs detalhados de operações
+  - Buffer circular para mensagens
+  - Visualização dentro do editor (tecla L)
+
+🔧 **Modo Verbose**
+  - Logs detalhados opcionais
+  - Ativação via --verbose
+  - Debug avançado do sistema
+
+🔌 **Sistema de Plugins**
+  - Carregamento dinâmico de plugins (.so)
+  - API para extensões de terceiros
+  - Gerenciamento integrado de plugins
 
 🎨 Interface moderna com cores e elementos visuais limpos
 🧭 Navegação intuitiva com setas direcionais
@@ -16,72 +49,34 @@
 🗑️ Exclusão de arquivos com confirmação de segurança
 📝 Editor com numeração de linhas e cursor visual
 🔍 Sistema de busca em arquivos
-🌐 Interface 100% em português brasileiro
 ⚡ Performance otimizada em C
 🗂️ Arquitetura modular para melhor organização
 
-🚀 Roadmap de Futuras Funcionalidades
-
-O Mohavim ainda está em estágio inicial, mas estas são as próximas melhorias planejadas:
-
-Idiomas (i18n)
-
-Suporte a múltiplos idiomas (ex: Português, Inglês).
-
-Arquivos de tradução externos para facilitar colaboração.
-
-Temas
-
-Suporte a temas claros/escuros.
-
-Configuração customizada de cores via arquivo.
-
-Logs internos
-
-Visualizar logs diretamente no editor.
-
-Nível de detalhe configurável (verbose ON/OFF).
-
-Verbose mode
-
-Parâmetro --verbose para ativar logs detalhados.
-
-Útil para debug e contribuições.
-
-Plugins
-
-Suporte a módulos externos criados pelo usuário.
-
-Carregamento dinâmico de plugins (.so).
-
-API simples para estender o editor.
-
-Configurações persistentes
-
-Arquivo ~/.mohavimrc para salvar idioma, tema e preferências.
-
-Qualidade de vida
-
-Melhorar interface de menus.
-
-Otimizar atalhos e navegação.
-
-Reduzir bugs conhecidos.
-
-- [x] Abrir arquivos
-- [x] Salvar arquivos
-- [ ] Idiomas (i18n)
-- [ ] Temas
-- [ ] Logs internos
-- [ ] Verbose mode
-- [ ] Plugins
-- [ ] Configurações persistentes
-
 🚀 Como usar
 
-Os arquivos de texto recém-criados serão armazenados no diretório atual ao executar o Mohavim.
+### Argumentos de Linha de Comando
 
-Por exemplo:
+```bash
+# Executar com idioma específico
+  mohavim --lang pt          # Português
+  mohavim --lang en          # English
+
+# Executar com tema específico
+  mohavim --theme dark       # Tema escuro
+  mohavim --theme light      # Tema claro
+  mohavim --theme cyberpunk  # Tema cyberpunk
+
+# Modo verbose para debug
+  mohavim --verbose
+
+# Instalar plugin
+  mohavim --install-plugin nome_do_plugin
+
+# Combinar argumentos
+  mohavim --lang en --theme cyberpunk --verbose
+```
+
+### Execução CLI
 
 ❯ pwd → /home/usuario/Documents/
 
@@ -96,9 +91,6 @@ Por exemplo:
 ❯ Ctrl+Q para sair
 
 Assim, o arquivo teste.txt será salvo em: /home/usuario/Documents/teste.txt.
-
-A leitura e edição dos arquivos de texto funcionam da mesma maneira.
-
 
 🚀 Instalação
 
@@ -125,51 +117,159 @@ make
 ./mohavim
 ```
 
-
 📦 Dependências
 
 ### Para execução:
 - GCC (compilador C)
 - Make (sistema de build)
 - Bibliotecas padrão (termios, dirent)
+- libdl (para sistema de plugins)
 
 ### Para desenvolvimento:
 - GCC com suporte a C99+
 - GNU Make 3.81+
 - Sistema Unix/Linux (testado em Ubuntu, Arch, etc.)
 
-
 🎮 Controles
-Navegador de Arquivos:
+
+### Navegador de Arquivos:
 - ↑↓ : navegar
 - Enter : abrir arquivo
 - D : excluir (confirmação SIM)
 - ESC : voltar
 
-
-Editor de Texto:
+### Editor de Texto:
 - ↑↓←→ : navegação
 - Ctrl+S : salvar
 - Ctrl+Q : sair
 - ESC : voltar
 - Enter : nova linha
 - Backspace : apagar
-
+- L : visualizar logs
 
 📂 Estrutura
 
+```
 src/
-├── main.c      → programa principal
-├── editor.c/.h → funcionalidades do editor
-├── ui.c/.h     → interface e controles
-├── files.c/.h  → gerenciamento de arquivos
-├── Makefile    → sistema de compilação
-└── mohavim     → executável compilado
+├── main.c           → programa principal com argumentos CLI
+├── editor.c/.h      → funcionalidades do editor
+├── ui.c/.h          → interface e controles
+├── files.c/.h       → gerenciamento de arquivos
+├── i18n.c/.h        → sistema de internacionalização
+├── theme.c/.h       → sistema de temas
+├── log.c/.h         → sistema de logs
+├── plugin_manager.c/.h → gerenciamento de plugins
+├── Makefile         → sistema de compilação
+└── mohavim          → executável compilado
 
-README.md       → documentação
-CODIGO_FONTE.md → documentação técnica
-LICENSE         → licença
-install.sh      → script de instalação
+translations/        → arquivos de tradução
+├── pt.json         → strings em português
+└── en.json         → strings em inglês
+
+themes/             → configurações de temas
+└── themes.json     → definições de cores
+
+plugins/            → plugins de terceiros
+└── exemplo.so      → plugin exemplo
+
+README.md           → documentação
+CODIGO_FONTE.md     → documentação técnica
+LICENSE             → licença
+install.sh          → script de instalação
+```
+
+🌐 Internacionalização
+
+O Mohavim suporta múltiplos idiomas através do sistema i18n:
+
+- **Português (pt)**: Idioma padrão
+- **English (en)**: Tradução completa
+- **Extensível**: Fácil adição de novos idiomas
+
+### Adicionando novos idiomas:
+1. Crie arquivo `translations/codigo_idioma.json`
+2. Traduza todas as strings necessárias
+3. Use `mohavim --lang codigo_idioma`
+
+🎨 Sistema de Temas
+
+Três temas incluídos:
+
+- **Dark**: Tema escuro padrão
+- **Light**: Tema claro
+- **Cyberpunk**: Tema futurista com cores neon
+
+### Criando novos temas:
+1. Edite `themes/themes.json`
+2. Adicione nova configuração de cores
+3. Use `mohavim --theme nome_tema`
+
+🔌 Sistema de Plugins
+
+O Mohavim suporta plugins dinâmicos em C:
+
+```c
+// Plugin exemplo
+typedef struct {
+    char name[64];
+    char version[16];
+    void (*init)(void);
+    void (*cleanup)(void);
+} plugin_info_t;
+
+plugin_info_t* plugin_init() {
+    // Implementação do plugin
+    return &plugin_info;
+}
+```
+
+### Instalando plugins:
+```bash
+  mohavim --install-plugin nome_plugin
+```
+
+📋 Sistema de Logs
+
+Logs detalhados de todas as operações:
+
+- **Buffer circular**: Armazena últimas mensagens
+- **Visualização interna**: Tecla L no editor
+- **Modo verbose**: Logs detalhados com --verbose
+- **Categorias**: Info, Warning, Error, Debug
+
+🔧 Modo Verbose
+
+Ative logs detalhados para desenvolvimento:
+
+```bash
+  mohavim --verbose
+```
+
+Mostra:
+- Carregamento de módulos
+- Operações de arquivo
+- Estados do editor
+- Erros detalhados
+
+Uso ⌨️
+
+Execute `mohavim`
+
+Use argumentos para personalizar: `mohavim --lang en --theme cyberpunk`
+
+Use as setas ↑/↓ para navegar no menu
+
+Pressione Enter para selecionar opções
+
+No seletor de arquivos: Pressione D para excluir arquivo (requer confirmação digitando SIM)
+
+No editor: 
+- Ctrl+S para salvar
+- Ctrl+Q para sair  
+- ESC para voltar ao menu
+- L para visualizar logs
+- T para menu de temas
+- I para menu de idiomas
 
 Contribuição
 
@@ -177,12 +277,25 @@ Quer contribuir com o Mohavim?
 
 Me contate em: gabriellramone@gmail.com
 
+O projeto aceita:
+- Traduções para novos idiomas
+- Novos temas de cores
+- Plugins de terceiros
+- Melhorias no código
 
 Mohavim é distribuído sob a licença GNU GPLv3.  
 
 Consulte o arquivo LICENSE para mais detalhes.
 
-
 🛰️ Versão:
 
-Mohavim 7.2 🔥
+**Mohavim 7.3** 🔥
+
+Changelog v7.3:
+- ✨ Sistema de internacionalização (i18n)
+- 🎨 Sistema de temas customizáveis
+- 📋 Sistema de logs interno
+- 🔧 Modo verbose para debug
+- 🔌 Sistema de plugins dinâmicos
+- 🌐 Interface multilíngue
+- ⚡ Arquitetura modular expandida
