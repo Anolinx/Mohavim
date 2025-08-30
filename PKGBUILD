@@ -1,9 +1,9 @@
 # Maintainer: Gabriel A. Matos <gabriellramone@gmail.com>
 
 pkgname=mohavim
-pkgver=7.2
+pkgver=7.3
 pkgrel=1
-pkgdesc="Editor de texto modernizado com arquitetura modular"
+pkgdesc="Editor de texto moderno com arquitetura modular"
 arch=('x86_64' 'i686' 'aarch64')
 url="https://"
 license=('GPL3')
