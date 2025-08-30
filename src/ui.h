@@ -8,5 +8,8 @@ int ler_tecla();
 void configurar_terminal();
 void restaurar_terminal();
 void sobre();
+void show_logs();
+void mostrar_menu_temas();
+void mostrar_menu_idiomas();
 
 #endif
