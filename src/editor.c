@@ -1,6 +1,9 @@
 #include "editor.h"
 #include "ui.h"
 #include "files.h"
+#include "i18n.h"
+#include "theme.h"
+#include "log.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +23,9 @@ void editor_simples(char* nome_arquivo) {
         size_t bytes_read = fread(buffer, 1, sizeof(buffer) - 1, arquivo);
         buffer[bytes_read] = '\0';
         fclose(arquivo);
+        log_message(LOG_INFO, "Arquivo '%s' carregado (%zu bytes)", nome_arquivo, bytes_read);
+    } else {
+        log_message(LOG_INFO, "Novo arquivo '%s' criado", nome_arquivo);
     }
     
     int buffer_len = strlen(buffer);
@@ -41,9 +47,9 @@ void editor_simples(char* nome_arquivo) {
             }
         }
         
-        printf("\033[1;36m🖊️  MOHAVIM\033[0m - \033[1m%s\033[0m %s\n", nome_arquivo, 
-               modificado ? "\033[1;33m[MODIFICADO]\033[0m" : "\033[1;32m[Salvo]\033[0m");
-        printf("\033[33mCtrl+S\033[0m:Salvar  \033[33mCtrl+Q\033[0m:Sair  \033[33mESC\033[0m:Menu  \033[33m↑↓←→\033[0m:Navegar\n\n");
+        printf("%s%s\033[0m - \033[1m%s\033[0m %s\n", get_color("accent"), get_string("editor_title"), nome_arquivo, 
+               modificado ? get_string("modified") : get_string("saved"));
+        printf("%s\n\n", get_string("controls"));
         
         // Mostrar até 15 linhas do conteúdo com numeração
         int linha_exibida = 1;
@@ -96,9 +102,11 @@ void editor_simples(char* nome_arquivo) {
         }
         
         printf("\n\n");
-        printf("\033[36mLinha:\033[0m \033[1m%d\033[0m \033[2m|\033[0m \033[36mColuna:\033[0m \033[1m%d\033[0m \033[2m|\033[0m \033[36mTotal:\033[0m \033[1m%d\033[0m chars \033[2m|\033[0m %s\n", 
-               linha_atual, coluna_atual, buffer_len,
-               modificado ? "\033[1;33mMODIFICADO\033[0m" : "\033[1;32mSalvo\033[0m");
+        printf("%s%s:\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s:\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s:\033[0m \033[1m%d\033[0m %s \033[2m|\033[0m %s\n", 
+               get_color("accent"), get_string("line"), linha_atual,
+               get_color("accent"), get_string("column"), coluna_atual,
+               get_color("accent"), get_string("total"), buffer_len, get_string("chars"),
+               modificado ? get_string("modified") : get_string("saved"));
         
         int tecla = ler_tecla();
         
@@ -175,6 +183,9 @@ void editor_simples(char* nome_arquivo) {
                     fwrite(buffer, 1, buffer_len, arquivo);
                     fclose(arquivo);
                     modificado = 0;
+                    log_message(LOG_INFO, "Arquivo '%s' salvo com sucesso", nome_arquivo);
+                } else {
+                    log_message(LOG_ERROR, "Erro ao salvar arquivo '%s'", nome_arquivo);
                 }
                 break;
                 
@@ -199,6 +210,13 @@ void editor_simples(char* nome_arquivo) {
                 restaurar_terminal();
                 return;
                 
+            case 'l':
+            case 'L': // Mostrar logs
+                restaurar_terminal();
+                show_logs();
+                configurar_terminal();
+                break;
+                
             case 127: // Backspace
                 if (cursor > 0) {
                     memmove(&buffer[cursor - 1], &buffer[cursor], buffer_len - cursor + 1);
@@ -209,7 +227,7 @@ void editor_simples(char* nome_arquivo) {
                 break;
                 
             case 10: // Enter
-                if (buffer_len < sizeof(buffer) - 1) {
+                if (buffer_len < (int)sizeof(buffer) - 1) {
                     memmove(&buffer[cursor + 1], &buffer[cursor], buffer_len - cursor + 1);
                     buffer[cursor] = '\n';
                     cursor++;
@@ -220,7 +238,7 @@ void editor_simples(char* nome_arquivo) {
                 
             default:
                 // Inserir caractere normal
-                if (tecla >= 32 && tecla <= 126 && buffer_len < sizeof(buffer) - 1) {
+                if (tecla >= 32 && tecla <= 126 && buffer_len < (int)sizeof(buffer) - 1) {
                     memmove(&buffer[cursor + 1], &buffer[cursor], buffer_len - cursor + 1);
                     buffer[cursor] = tecla;
                     cursor++;
