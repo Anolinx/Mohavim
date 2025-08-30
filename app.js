@@ -395,7 +395,7 @@ install: $(TARGET)
 
 # Script de instalação do Mohavim
 
-echo "=== Instalando Mohavim ==="
+echo "=== Instalando o Mohavim ==="
 
 # Diretório base
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -431,7 +431,7 @@ if [ $? -eq 0 ]; then
         echo "✅ Mohavim instalado em /usr/local/bin/mohavim"
         echo "Execute 'mohavim' de qualquer lugar no terminal."
     else
-        echo "Execute './mohavim' na pasta $BASE_DIR/src para usar o editor."
+        echo "Execute 'mohavim' para usar o editor."
     fi
     
     echo ""
