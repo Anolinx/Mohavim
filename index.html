@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohavim</title>
+    <title>Mohavim 7.3</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -18,8 +19,12 @@
 ▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌
 ▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌
                 </pre>
-                <h1>💀 MOHAVIM</h1>
+                <h1>💀 MOHAVIM 7.3</h1>
                 <p>Desenvolvido por: Gabriel A. Matos</p>
+                <div class="version-badge">
+                    <span class="new-badge">NOVO!</span>
+                    <span class="version-text">v7.3 - Editor Multilíngue com Plugins</span>
+                </div>
             </div>
         </header>
 
@@ -27,6 +32,9 @@
         <nav class="nav-tabs">
             <button class="tab-button active" data-tab="overview">
                 <i class="fas fa-home"></i> Visão Geral
+            </button>
+            <button class="tab-button" data-tab="features">
+                <i class="fas fa-star"></i> Novas Features
             </button>
             <button class="tab-button" data-tab="editor">
                 <i class="fas fa-edit"></i> Editor Web
@@ -47,49 +55,97 @@
             <!-- Overview Tab -->
             <div id="overview" class="tab-pane active">
                 <div class="section">
-                    <h2><i class="fas fa-star"></i> Features Principais</h2>
+                    <h2><i class="fas fa-rocket"></i> Mohavim 7.3 - Revolução Completa</h2>
+                    <div class="highlight-banner">
+                        <h3>🌟 O que há de novo na versão 7.3?</h3>
+                        <p>Editor completamente renovado com sistema de internacionalização, temas customizáveis, logs internos e sistema de plugins dinâmicos!</p>
+                    </div>
+                    
                     <div class="features-grid">
-                        <div class="feature-card">
+                        <div class="feature-card highlight">
+                            <i class="fas fa-globe"></i>
+                            <h3>Internacionalização (i18n)</h3>
+                            <p>Suporte completo a múltiplos idiomas - Português e Inglês incluídos</p>
+                            <div class="feature-usage">
+                                <code>mohavim --lang pt</code>
+                            </div>
+                        </div>
+                        <div class="feature-card highlight">
                             <i class="fas fa-palette"></i>
-                            <h3>Interface Moderna</h3>
-                            <p>Cores e elementos visuais limpos com navegação intuitiva</p>
+                            <h3>Sistema de Temas</h3>
+                            <p>Temas dark, light e cyberpunk com esquemas de cores personalizáveis</p>
+                            <div class="feature-usage">
+                                <code>mohavim --theme cyberpunk</code>
+                            </div>
                         </div>
-                        <div class="feature-card">
-                            <i class="fas fa-keyboard"></i>
-                            <h3>Navegação Intuitiva</h3>
-                            <p>Controle total com setas direcionais e atalhos de teclado</p>
+                        <div class="feature-card highlight">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Sistema de Logs</h3>
+                            <p>Logs detalhados com buffer circular e visualização interna (tecla L)</p>
+                            <div class="feature-usage">
+                                <code>mohavim --verbose</code>
+                            </div>
                         </div>
-                        <div class="feature-card">
-                            <i class="fas fa-list-ol"></i>
-                            <h3>Numeração de Linhas</h3>
-                            <p>Editor com numeração automática e cursor visual destacado</p>
-                        </div>
-                        <div class="feature-card">
-                            <i class="fas fa-search"></i>
-                            <h3>Sistema de Busca</h3>
-                            <p>Busca avançada em arquivos com interface amigável</p>
-                        </div>
-                        <div class="feature-card">
-                            <i class="fas fa-folder-open"></i>
-                            <h3>Gerenciador de Arquivos</h3>
-                            <p>Navegação e seleção de arquivos no diretório atual</p>
-                        </div>
-                        <div class="feature-card">
-                            <i class="fas fa-shield-alt"></i>
-                            <h3>Exclusão Segura</h3>
-                            <p>Exclusão de arquivos com confirmação de segurança</p>
-                        </div>
-                        <div class="feature-card">
-                            <i class="fas fa-sitemap"></i>
-                            <h3>Arquitetura Modular</h3>
-                            <p>Código organizado em módulos para melhor manutenibilidade</p>
+                        <div class="feature-card highlight">
+                            <i class="fas fa-plug"></i>
+                            <h3>Sistema de Plugins</h3>
+                            <p>Carregamento dinâmico de plugins .so para extensibilidade total</p>
+                            <div class="feature-usage">
+                                <code>mohavim --install-plugin nome</code>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="section">
-                    <h2><i class="fas fa-gamepad"></i> Controles</h2>
+                    <h2><i class="fas fa-terminal"></i> Argumentos de Linha de Comando</h2>
+                    <div class="command-examples">
+                        <div class="command-block">
+                            <h4>🌐 Seleção de Idioma</h4>
+                            <div class="code-block">
+                                <code>
+mohavim --lang pt      # Português<br>
+mohavim --lang en      # English
+                                </code>
+                            </div>
+                        </div>
+                        <div class="command-block">
+                            <h4>🎨 Seleção de Tema</h4>
+                            <div class="code-block">
+                                <code>
+mohavim --theme dark      # Tema escuro<br>
+mohavim --theme light     # Tema claro<br>
+mohavim --theme cyberpunk # Tema cyberpunk
+                                </code>
+                            </div>
+                        </div>
+                        <div class="command-block">
+                            <h4>🔧 Combinação de Argumentos</h4>
+                            <div class="code-block">
+                                <code>
+mohavim --lang en --theme cyberpunk --verbose
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2><i class="fas fa-gamepad"></i> Controles Atualizados</h2>
                     <div class="controls-grid">
+                        <div class="control-group">
+                            <h3>Editor de Texto</h3>
+                            <ul>
+                                <li><kbd>↑↓←→</kbd> Navegação</li>
+                                <li><kbd>Ctrl+S</kbd> Salvar</li>
+                                <li><kbd>Ctrl+Q</kbd> Sair</li>
+                                <li><kbd>ESC</kbd> Voltar</li>
+                                <li><kbd class="new">L</kbd> <span class="new-feature">Visualizar Logs</span></li>
+                                <li><kbd class="new">T</kbd> <span class="new-feature">Menu de Temas</span></li>
+                                <li><kbd class="new">I</kbd> <span class="new-feature">Menu de Idiomas</span></li>
+                                <li><kbd class="new">P</kbd> <span class="new-feature">Gerenciar Plugins</span></li>
+                            </ul>
+                        </div>
                         <div class="control-group">
                             <h3>Navegador de Arquivos</h3>
                             <ul>
@@ -99,16 +155,85 @@
                                 <li><kbd>ESC</kbd> Voltar</li>
                             </ul>
                         </div>
-                        <div class="control-group">
-                            <h3>Editor de Texto</h3>
-                            <ul>
-                                <li><kbd>↑↓←→</kbd> Navegação</li>
-                                <li><kbd>Ctrl+S</kbd> Salvar</li>
-                                <li><kbd>Ctrl+Q</kbd> Sair</li>
-                                <li><kbd>ESC</kbd> Voltar</li>
-                                <li><kbd>Enter</kbd> Nova linha</li>
-                                <li><kbd>Backspace</kbd> Apagar</li>
-                            </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- New Features Tab -->
+            <div id="features" class="tab-pane">
+                <div class="section">
+                    <h2><i class="fas fa-star"></i> Novas Funcionalidades v7.3</h2>
+                    
+                    <div class="feature-detail">
+                        <h3><i class="fas fa-globe"></i> Sistema de Internacionalização</h3>
+                        <p>Sistema completo de i18n com suporte a múltiplos idiomas:</p>
+                        <ul>
+                            <li>✅ Carregamento dinâmico de traduções JSON</li>
+                            <li>✅ Português e Inglês incluídos</li>
+                            <li>✅ API extensível para novos idiomas</li>
+                            <li>✅ Fallback automático para idioma padrão</li>
+                        </ul>
+                        
+                        <h4>Estrutura de Tradução:</h4>
+                        <div class="code-block">
+                            <code>
+translations/<br>
+├── pt.json    # Português<br>
+└── en.json    # English
+                            </code>
+                        </div>
+                    </div>
+
+                    <div class="feature-detail">
+                        <h3><i class="fas fa-palette"></i> Sistema de Temas</h3>
+                        <p>Temas customizáveis com esquemas de cores profissionais:</p>
+                        <ul>
+                            <li>🌙 <strong>Dark</strong>: Tema escuro padrão</li>
+                            <li>☀️ <strong>Light</strong>: Tema claro para uso diurno</li>
+                            <li>🔮 <strong>Cyberpunk</strong>: Tema futurista com cores neon</li>
+                        </ul>
+                        
+                        <h4>Configuração:</h4>
+                        <div class="code-block">
+                            <code>
+themes/<br>
+└── themes.json    # Configurações de cores
+                            </code>
+                        </div>
+                    </div>
+
+                    <div class="feature-detail">
+                        <h3><i class="fas fa-clipboard-list"></i> Sistema de Logs</h3>
+                        <p>Sistema robusto de logging interno:</p>
+                        <ul>
+                            <li>📋 Buffer circular para eficiência</li>
+                            <li>🕒 Timestamps automáticos</li>
+                            <li>📊 Níveis: INFO, WARNING, ERROR, DEBUG</li>
+                            <li>👁️ Visualização integrada no editor</li>
+                            <li>🔧 Modo verbose para debug</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-detail">
+                        <h3><i class="fas fa-plug"></i> Sistema de Plugins</h3>
+                        <p>Arquitetura extensível com plugins dinâmicos:</p>
+                        <ul>
+                            <li>🔌 Carregamento via dlopen (.so)</li>
+                            <li>🛠️ API padronizada para desenvolvimento</li>
+                            <li>📦 Gerenciamento integrado</li>
+                            <li>🔒 Sistema de segurança</li>
+                        </ul>
+                        
+                        <h4>API de Plugin:</h4>
+                        <div class="code-block">
+                            <code>
+typedef struct {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char name[64];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;char version[16];<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void (*init)(void);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;void (*cleanup)(void);<br>
+} plugin_info_t;
+                            </code>
                         </div>
                     </div>
                 </div>
@@ -138,12 +263,27 @@
                         <div class="editor-wrapper">
                             <div class="line-numbers" id="line-numbers">1</div>
                             <textarea id="text-editor" placeholder="Digite seu texto aqui...
-Controles:
-- Ctrl+S para salvar
-- Ctrl+N para novo arquivo
-- Ctrl+O para abrir arquivo
 
-Este é um editor web que simula a experiência do Mohavim original."></textarea>
+// MOHAVIM 7.3 - NOVAS FUNCIONALIDADES
+
+🌐 Internacionalização:
+  mohavim --lang en
+  mohavim --lang pt
+
+🎨 Temas:
+  mohavim --theme dark
+  mohavim --theme light
+  mohavim --theme cyberpunk
+
+📋 Sistema de Logs:
+  mohavim --verbose
+  Tecla L no editor para visualizar logs
+
+🔌 Plugins:
+  mohavim --install-plugin nome_plugin
+  Tecla P no editor para gerenciar
+
+Este é um editor web que simula a experiência do Mohavim 7.3."></textarea>
                         </div>
                         <div class="editor-status">
                             <span>Linha: <span id="current-line">1</span></span>
@@ -164,40 +304,79 @@ Este é um editor web que simula a experiência do Mohavim original."></textarea
                             <div class="file-list">
                                 <div class="file-item" data-file="src/main.c">
                                     <i class="fas fa-file-code"></i> src/main.c
-                                    <span class="file-size">Programa principal</span>
+                                    <span class="file-size">Programa principal com CLI</span>
                                 </div>
                                 <div class="file-item" data-file="src/editor.c">
                                     <i class="fas fa-file-code"></i> src/editor.c
-                                    <span class="file-size">Motor do editor</span>
+                                    <span class="file-size">Motor do editor com logs</span>
                                 </div>
                                 <div class="file-item" data-file="src/ui.c">
                                     <i class="fas fa-file-code"></i> src/ui.c
-                                    <span class="file-size">Interface de usuário</span>
+                                    <span class="file-size">Interface multilíngue</span>
                                 </div>
                                 <div class="file-item" data-file="src/files.c">
                                     <i class="fas fa-file-code"></i> src/files.c
                                     <span class="file-size">Gerenciamento de arquivos</span>
                                 </div>
+                                <div class="file-item new-file" data-file="src/i18n.c">
+                                    <i class="fas fa-file-code"></i> src/i18n.c
+                                    <span class="file-size">Sistema de internacionalização</span>
+                                    <span class="new-badge">NOVO</span>
+                                </div>
+                                <div class="file-item new-file" data-file="src/theme.c">
+                                    <i class="fas fa-file-code"></i> src/theme.c
+                                    <span class="file-size">Sistema de temas</span>
+                                    <span class="new-badge">NOVO</span>
+                                </div>
+                                <div class="file-item new-file" data-file="src/log.c">
+                                    <i class="fas fa-file-code"></i> src/log.c
+                                    <span class="file-size">Sistema de logs</span>
+                                    <span class="new-badge">NOVO</span>
+                                </div>
+                                <div class="file-item new-file" data-file="src/plugin_manager.c">
+                                    <i class="fas fa-file-code"></i> src/plugin_manager.c
+                                    <span class="file-size">Gerenciamento de plugins</span>
+                                    <span class="new-badge">NOVO</span>
+                                </div>
                                 <div class="file-item" data-file="src/Makefile">
                                     <i class="fas fa-file-alt"></i> src/Makefile
                                     <span class="file-size">Sistema de compilação</span>
                                 </div>
-                                <div class="file-item" data-file="install.sh">
-                                    <i class="fas fa-file-alt"></i> install.sh
-                                    <span class="file-size">Script de instalação</span>
+                                <div class="file-item" data-file="translations/pt.json">
+                                    <i class="fas fa-file-code"></i> translations/pt.json
+                                    <span class="file-size">Traduções português</span>
+                                    <span class="new-badge">NOVO</span>
                                 </div>
-                                <div class="file-item" data-file="README.md">
-                                    <i class="fas fa-file-alt"></i> README.md
-                                    <span class="file-size">Documentação</span>
+                                <div class="file-item" data-file="translations/en.json">
+                                    <i class="fas fa-file-code"></i> translations/en.json
+                                    <span class="file-size">Traduções inglês</span>
+                                    <span class="new-badge">NOVO</span>
                                 </div>
-                                <div class="file-item" data-file="CODIGO_FONTE.md">
-                                    <i class="fas fa-file-alt"></i> CODIGO_FONTE.md
-                                    <span class="file-size">Documentação técnica</span>
+                                <div class="file-item" data-file="themes/themes.json">
+                                    <i class="fas fa-file-code"></i> themes/themes.json
+                                    <span class="file-size">Configurações de temas</span>
+                                    <span class="new-badge">NOVO</span>
                                 </div>
                             </div>
                         </div>
                         <div class="source-viewer">
-                            <pre id="source-content"><code>Selecione um arquivo para visualizar seu conteúdo.</code></pre>
+                            <pre id="source-content"><code>Selecione um arquivo para visualizar seu conteúdo.
+
+🌟 Mohavim 7.3 - Arquitetura Expandida
+
+Novos módulos implementados:
+• i18n.c/.h - Internacionalização
+• theme.c/.h - Sistema de temas  
+• log.c/.h - Sistema de logs
+• plugin_manager.c/.h - Plugins dinâmicos
+
+Funcionalidades principais:
+• Suporte a múltiplos idiomas
+• Temas customizáveis
+• Logs internos com buffer circular
+• Sistema de plugins extensível
+• Argumentos de linha de comando
+• Interface moderna multilíngue</code></pre>
                         </div>
                     </div>
                 </div>
@@ -206,7 +385,7 @@ Este é um editor web que simula a experiência do Mohavim original."></textarea
             <!-- Installation Tab -->
             <div id="install" class="tab-pane">
                 <div class="section">
-                    <h2><i class="fas fa-download"></i> Instalação</h2>
+                    <h2><i class="fas fa-download"></i> Instalação v7.3</h2>
                     
                     <div class="install-methods">
                         <div class="install-method">
@@ -239,10 +418,11 @@ make clean<br><br>
 # Compilar o projeto<br>
 make<br><br>
 
-# Executar localmente<br>
-./mohavim<br><br>
+# Executar com argumentos<br>
+mohavim --lang pt --theme dark<br>
+mohavim --verbose<br><br>
 
-# Ou instalar no sistema<br>
+# Instalar no sistema<br>
 sudo cp mohavim /usr/local/bin/<br>
 sudo chmod +x /usr/local/bin/mohavim
                                 </code>
@@ -250,11 +430,12 @@ sudo chmod +x /usr/local/bin/mohavim
                         </div>
 
                         <div class="install-method">
-                            <h3><i class="fas fa-box"></i> Dependências</h3>
+                            <h3><i class="fas fa-box"></i> Dependências Atualizadas</h3>
                             <ul>
-                                <li><strong>GCC</strong> - Compilador C</li>
+                                <li><strong>GCC</strong> - Compilador C com suporte C99+</li>
                                 <li><strong>Make</strong> - Sistema de build</li>
                                 <li><strong>libc</strong> - Biblioteca padrão C</li>
+                                <li><strong>libdl</strong> - Para carregamento dinâmico de plugins</li>
                                 <li><strong>termios</strong> - Controle de terminal</li>
                                 <li><strong>dirent</strong> - Navegação de diretórios</li>
                             </ul>
@@ -262,13 +443,20 @@ sudo chmod +x /usr/local/bin/mohavim
                     </div>
 
                     <div class="usage-guide">
-                        <h3><i class="fas fa-play"></i> Como Usar</h3>
+                        <h3><i class="fas fa-play"></i> Como Usar v7.3</h3>
                         <ol>
-                            <li>Entre na pasta: <code>cd src/</code></li>
-                            <li>Execute <code>./mohavim</code> no terminal</li>
+                            <li>Execute com argumentos: <code>mohavim --lang pt --theme cyberpunk</code></li>
                             <li>Use as setas ↑/↓ para navegar no menu</li>
                             <li>Pressione Enter para selecionar opções</li>
-                            <li>No editor: Ctrl+S para salvar, Ctrl+Q para sair</li>
+                            <li>No editor: 
+                                <ul>
+                                    <li>Ctrl+S para salvar, Ctrl+Q para sair</li>
+                                    <li><kbd class="new">L</kbd> para visualizar logs</li>
+                                    <li><kbd class="new">T</kbd> para menu de temas</li>
+                                    <li><kbd class="new">I</kbd> para menu de idiomas</li>
+                                    <li><kbd class="new">P</kbd> para gerenciar plugins</li>
+                                </ul>
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -277,7 +465,7 @@ sudo chmod +x /usr/local/bin/mohavim
             <!-- About Tab -->
             <div id="about" class="tab-pane">
                 <div class="section">
-                    <h2><i class="fas fa-info-circle"></i> Sobre o Mohavim</h2>
+                    <h2><i class="fas fa-info-circle"></i> Sobre o Mohavim 7.3</h2>
                     <div class="about-content">
                         <div class="about-card">
                             <h3><i class="fas fa-user"></i> Criador</h3>
@@ -285,10 +473,10 @@ sudo chmod +x /usr/local/bin/mohavim
                             <p>Email: gabriellramone@gmail.com</p>
                         </div>
 
-                        <div class="about-card">
-                            <h3><i class="fas fa-tag"></i> Versão</h3>
-                            <p><strong>Mohavim 7.2</strong></p>
-                            <p>Editor moderno com arquitetura modular</p>
+                        <div class="about-card highlight">
+                            <h3><i class="fas fa-tag"></i> Versão Atual</h3>
+                            <p><strong>Mohavim 7.3</strong></p>
+                            <p>Editor multilíngue com sistema completo de plugins</p>
                         </div>
 
                         <div class="about-card">
@@ -304,10 +492,60 @@ sudo chmod +x /usr/local/bin/mohavim
                         </div>
                     </div>
 
+                    <div class="changelog">
+                        <h3><i class="fas fa-history"></i> Changelog v7.3</h3>
+                        <div class="changelog-content">
+                            <div class="changelog-item">
+                                <h4>🌐 Sistema de Internacionalização</h4>
+                                <ul>
+                                    <li>Suporte completo a múltiplos idiomas</li>
+                                    <li>Português e Inglês incluídos</li>
+                                    <li>API extensível para novos idiomas</li>
+                                    <li>Argumento --lang para seleção</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-item">
+                                <h4>🎨 Sistema de Temas</h4>
+                                <ul>
+                                    <li>Temas dark, light e cyberpunk</li>
+                                    <li>Configurações JSON customizáveis</li>
+                                    <li>Mudança dinâmica de cores</li>
+                                    <li>Menu integrado no editor (T)</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-item">
+                                <h4>📋 Sistema de Logs</h4>
+                                <ul>
+                                    <li>Buffer circular otimizado</li>
+                                    <li>Múltiplos níveis de log</li>
+                                    <li>Visualização no editor (L)</li>
+                                    <li>Modo verbose para debug</li>
+                                </ul>
+                            </div>
+                            <div class="changelog-item">
+                                <h4>🔌 Sistema de Plugins</h4>
+                                <ul>
+                                    <li>Carregamento dinâmico .so</li>
+                                    <li>API padronizada</li>
+                                    <li>Gerenciamento integrado (P)</li>
+                                    <li>Sistema de segurança</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="contribution">
                         <h3><i class="fas fa-hands-helping"></i> Contribuição</h3>
-                        <p>Quer contribuir com o Mohavim? Entre em contato!</p>
-                        <p>Este projeto está sob desenvolvimento ativo e aceita contribuições da comunidade.</p>
+                        <p>Quer contribuir com o Mohavim?</p>
+                        <p>Este projeto está sob desenvolvimento ativo e aceita contribuições para:</p>
+                        <ul>
+                            <li>🌐 Traduções para novos idiomas</li>
+                            <li>🎨 Novos temas de cores</li>
+                            <li>🔌 Plugins de terceiros</li>
+                            <li>🐛 Correções de bugs</li>
+                            <li>✨ Novas funcionalidades</li>
+                        </ul>
+                        <p>Entre em contato: <strong>gabriellramone@gmail.com</strong></p>
                     </div>
                 </div>
             </div>
