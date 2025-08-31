@@ -50,7 +50,7 @@ void mostrar_menu(int opcao) {
     mostrar_logo();
     printf("\n               \033[1;36m🏠 MENU PRINCIPAL\033[0m\n\n");
     
-    char* opcoes[] = {
+    char*opcoes[] = {
         (char*)get_string("📂 Abrir e Editar Arquivo"),
         (char*)get_string("📝 Criar Novo Arquivo"),
         (char*)get_string("🔍 Buscar em Arquivo"),
@@ -109,39 +109,114 @@ void show_logs() {
 }
 
 void mostrar_menu_temas() {
-    limpar_tela();
-    printf("\033[1;36m🎨 %s\033[0m\n\n", get_string("themes"));
-
-    printf("Temas disponíveis:\n");
-    printf("  %s dark (Escuro)\n", current_theme == 0 ? "►" : " ");
-    printf("  %s light (Claro)\n", current_theme == 1 ? "►" : " ");
-    printf("  %s cyberpunk (Cyberpunk)\n", current_theme == 2 ? "►" : " ");
-
-    printf("\nUse os argumentos da linha de comando:\n");
-    printf("  mohavim --theme dark\n");
-    printf("  mohavim --theme light\n");
-    printf("  mohavim --theme cyberpunk\n");
-
-    printf("\nPressione qualquer tecla para voltar...");
+    int opcao_tema = current_theme;
     configurar_terminal();
-    ler_tecla();
-    restaurar_terminal();
+
+    while(1) {
+        limpar_tela();
+        printf("\033[1;36m🎨 %s\033[0m\n\n", get_string("themes"));
+
+        printf("Temas disponíveis:\n");
+
+        // Dark theme
+        if (opcao_tema == 0) {
+            printf("  %s► \033[1mdark (Escuro)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+        } else {
+            printf("   dark (Escuro)\n");
+        }
+
+        // Light theme
+        if (opcao_tema == 1) {
+            printf("  %s► \033[1mlight (Claro)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+        } else {
+            printf("   light (Claro)\n");
+        }
+
+        // Cyberpunk theme
+        if (opcao_tema == 2) {
+            printf("  %s► \033[1mcyberpunk (Cyberpunk)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+        } else {
+            printf("   cyberpunk (Cyberpunk)\n");
+        }
+
+        printf("\n%s  %s  %s\n",
+               get_string("Navegar ↑↓"),
+               get_string("Selecionar: Enter"),
+               get_string("Sair: ESC"));
+
+        int tecla = ler_tecla();
+        switch(tecla) {
+            case 65: // Seta para cima
+                opcao_tema = (opcao_tema - 1 + 3) % 3;
+                break;
+            case 66: // Seta para baixo
+                opcao_tema = (opcao_tema + 1) % 3;
+                break;
+            case 10: // Enter
+                if (opcao_tema == 0) {
+                    load_theme("dark");
+                } else if (opcao_tema == 1) {
+                    load_theme("light");
+                } else if (opcao_tema == 2) {
+                    load_theme("cyberpunk");
+                }
+                restaurar_terminal();
+                return;
+            case 27: // ESC
+                restaurar_terminal();
+                return;
+        }
+    }
 }
 
 void mostrar_menu_idiomas() {
-    limpar_tela();
-    printf("\033[1;36m🌐 Idiomas\033[0m\n\n");
-
-    printf("Idiomas disponíveis:\n");
-    printf("  %s pt (Português)\n", current_language == 0 ? "►" : " ");
-    printf("  %s en (English)\n", current_language == 1 ? "►" : " ");
-
-    printf("\nUse os argumentos da linha de comando:\n");
-    printf("  mohavim --lang pt\n");
-    printf("  mohavim --lang en\n");
-
-    printf("\nPressione qualquer tecla para voltar...");
+    int opcao_idioma = current_language;
     configurar_terminal();
-    ler_tecla();
-    restaurar_terminal();
+
+    while(1) {
+        limpar_tela();
+        printf("\033[1;36m🌐 Idiomas\033[0m\n\n");
+
+        printf("Idiomas disponíveis:\n");
+
+        // Português
+        if (opcao_idioma == 0) {
+            printf("  %s► \033[1mpt (Português)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+        } else {
+            printf("   pt (Português)\n");
+        }
+
+        // English
+        if (opcao_idioma == 1) {
+            printf("  %s► \033[1men (English)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+        } else {
+            printf("   en (English)\n");
+        }
+
+        printf("\n%s  %s  %s\n",
+               get_string("Navegar ↑↓"),
+               get_string("Selecionar: Enter"),
+               get_string("Sair: ESC"));
+
+        int tecla = ler_tecla();
+        switch(tecla) {
+            case 65: // Seta para cima
+                opcao_idioma = (opcao_idioma - 1 + 2) % 2;
+                break;
+            case 66: // Seta para baixo
+                opcao_idioma = (opcao_idioma + 1) % 2;
+                break;
+            case 10: // Enter
+                if (opcao_idioma == 0) {
+                    load_language("pt_br");
+                } else if (opcao_idioma == 1) {
+                    load_language("en");
+                }
+                restaurar_terminal();
+                return;
+            case 27: // ESC
+                restaurar_terminal();
+                return;
+        }
+    }
 }
