@@ -22,5 +22,7 @@ void init_themes();
 int load_theme(const char *name);
 const char* get_color(const char *type);
 void apply_theme_colors();
+void reset_colors();
+void print_with_color(const char* color, const char* text);
 
 #endif
