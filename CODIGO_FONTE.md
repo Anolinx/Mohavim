@@ -27,11 +27,7 @@ O projeto `src/` contém:
 - `log.c/.h` - Sistema de logs interno
 - `plugin_manager.c/.h` - Gerenciamento de plugins
 - `Makefile` - Sistema de compilação otimizado
-
-### 📁 Novos Diretórios:
-- `translations/` - Arquivos de tradução JSON
-- `themes/` - Configurações de temas
-- `plugins/` - Plugins de terceiros
+  
 
 ## 🗂️ Detalhamento dos Módulos
 
