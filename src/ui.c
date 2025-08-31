@@ -10,8 +10,9 @@
 struct termios old_termios;
 
 void limpar_tela() {
-    // Limpar tela
-    printf("\033[2J\033[H");
+    // Limpar tela completamente e resetar cores
+    printf("\033[2J\033[H\033[0m");
+    apply_theme_colors();
 }
 void configurar_terminal() {
     tcgetattr(STDIN_FILENO, &old_termios);
@@ -36,73 +37,89 @@ int ler_tecla() {
     return ch;
 }
 void mostrar_logo() {
+    printf("\033[2J\033[H\033[0m"); // Reset completo da tela
+    apply_theme_colors();
+    
     printf("=============================================\n");
-    printf("   ▗▖  ▗▖ ▗▄▖ ▗▖ ▗▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖\n");
-    printf("   ▐▛▚▞▜▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌  ▐▌  █  ▐▛▚▞▜▌\n");
-    printf("   ▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\n");
-    printf("   ▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\n");
+    print_with_color(get_color("accent"), "   ▗▖  ▗▖ ▗▄▖ ▗▖ ▗▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖\n");
+    print_with_color(get_color("accent"), "   ▐▛▚▞▜▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌  ▐▌  █  ▐▛▚▞▜▌\n");
+    print_with_color(get_color("accent"), "   ▐▌  ▐▌▐▌ ▐▌▐▛▀▜▌▐▛▀▜▌▐▌  ▐▌  █  ▐▌  ▐▌\n");
+    print_with_color(get_color("accent"), "   ▐▌  ▐▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌ ▝▚▞▘ ▗▄█▄▖▐▌  ▐▌\n");
     printf("\n");
-    printf("     Desenvolvido por: Gabriel A. Matos\n");
+    printf("%s     Desenvolvido por: Gabriel A. Matos\n", get_color("foreground"));
     printf("=============================================\n");
 }
 void mostrar_menu(int opcao) {
     limpar_tela();
+    apply_theme_colors();
     mostrar_logo();
-    printf("\n               \033[1;36m🏠 MENU PRINCIPAL\033[0m\n\n");
     
+    printf("\n               %s🏠 MENU PRINCIPAL\033[0m", get_color("accent"));
+    printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+    printf("\n\n");
+
     char*opcoes[] = {
         (char*)get_string("📂 Abrir e Editar Arquivo"),
         (char*)get_string("📝 Criar Novo Arquivo"),
         (char*)get_string("🔍 Buscar em Arquivo"),
-        (char*)get_string("Logs"),
-        (char*)get_string("Temas"),
+        (char*)get_string("📋 Logs"),
+        (char*)get_string("🎨 Temas"),
         "🌐 Idiomas",
-        (char*)get_string(" Plugins"),
+        (char*)get_string("🔌 Plugins"),
         (char*)get_string("ℹ️ Sobre"),
         (char*)get_string("🚪 Sair do Mohavim")
     };
 
-       for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 9; i++) {
         if (i == opcao) {
-            printf("  %s►\033[0m \033[1m%s\033[0m  %s◄\033[0m\n", get_color("highlight"), opcoes[i], get_color("highlight"));
+            printf("  %s► %s ◄\033[0m", get_color("highlight"), opcoes[i]);
+            printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+            printf("\n");
         } else {
             printf("    %s\n", opcoes[i]);
         }
     }
 
-       printf("\n%s  %s  %s\n",
-       get_string("Navegar ↑↓"),
-       get_string("Selecionar: Enter"),
-       get_string("Sair: ESC"));
+    printf("\n%sNavegar ↑↓\033[0m", get_color("accent"));
+    printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+    printf("  %sSelecionar: Enter\033[0m", get_color("accent"));
+    printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+    printf("  %sSair: ESC\033[0m", get_color("accent"));
+    printf("%s%s\n", themes[current_theme].background, themes[current_theme].foreground);
 }
 
 void sobre() {
-    printf("\033[2J\033[H");
-    printf("\033[1;36mℹ️  SOBRE O MOHAVIM\033[0m\n\n");
-    printf("🔧 Versão: Mohavim 7.3\n");
-    printf("🏠 Linguagem: C (nativo)\n");
-    printf("⌨️  Navegação: Setas + Atalhos\n");
+    limpar_tela();
+    apply_theme_colors();
+    print_with_color(get_color("accent"), "ℹ️  SOBRE O MOHAVIM");
+    printf("\n\n");
 
-    printf("Atalhos disponíveis:\n");
-    printf("- ↑↓←→: Navegação\n");
-    printf("- Ctrl+S: Salvar arquivo\n");  
-    printf("- Ctrl+Q: Sair do editor\n");
-    printf("- ESC: Voltar ao menu\n");
-    printf("- Enter: Nova linha\n");
-    printf("- Backspace: Deletar\n");
+    printf("%s🔧 Versão: %sMohavim 7.3%s\n", get_color("foreground"), get_color("success"), "\033[0m");
+    printf("%s🏠 Linguagem: %sC (nativo)%s\n", get_color("foreground"), get_color("accent"), "\033[0m");
+    printf("%s⌨️  Navegação: %sSetas + Atalhos%s\n", get_color("foreground"), get_color("accent"), "\033[0m");
 
-    printf("\nPressione Enter para voltar...");
+    printf("\n%sAtalhos disponíveis:%s\n", get_color("accent"), "\033[0m");
+    printf("%s- ↑↓←→: Navegação%s\n", get_color("foreground"), "\033[0m");
+    printf("%s- Ctrl+S: Salvar arquivo%s\n", get_color("foreground"), "\033[0m");  
+    printf("%s- Ctrl+Q: Sair do editor%s\n", get_color("foreground"), "\033[0m");
+    printf("%s- ESC: Voltar ao menu%s\n", get_color("foreground"), "\033[0m");
+    printf("%s- Enter: Nova linha%s\n", get_color("foreground"), "\033[0m");
+    printf("%s- Backspace: Deletar%s\n", get_color("foreground"), "\033[0m");
+
+    printf("\n%sPressione Enter para voltar...%s", get_color("highlight"), "\033[0m");
     restaurar_terminal();
     getchar();
 }
 
 void show_logs() {
     limpar_tela();
-    printf("\033[1;36m📋 %s\033[0m\n\n", get_string("logs"));
+    apply_theme_colors();
+    print_with_color(get_color("accent"), "📋 Logs");
+    printf("\n\n");
 
     display_logs();
 
-    printf("\nPressione qualquer tecla para voltar...");
+    printf("\n%sPressione qualquer tecla para voltar...%s", get_color("highlight"), "\033[0m");
     configurar_terminal();
     ler_tecla();
     restaurar_terminal();
@@ -114,35 +131,41 @@ void mostrar_menu_temas() {
 
     while(1) {
         limpar_tela();
-        printf("\033[1;36m🎨 %s\033[0m\n\n", get_string("themes"));
+        apply_theme_colors();
+        print_with_color(get_color("accent"), "🎨 Temas");
+        printf("\n\n");
 
-        printf("Temas disponíveis:\n");
+        print_with_color(get_color("foreground"), "Temas disponíveis:");
+        printf("\n\n");
 
         // Dark theme
         if (opcao_tema == 0) {
-            printf("  %s► \033[1mdark (Escuro)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+            printf("  %s► Escuro (Dark) ◄%s\n", get_color("highlight"), "\033[0m");
         } else {
-            printf("   dark (Escuro)\n");
+            printf("   %sEscuro (Dark)%s\n", get_color("foreground"), "\033[0m");
         }
 
         // Light theme
         if (opcao_tema == 1) {
-            printf("  %s► \033[1mlight (Claro)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+            printf("  %s► Claro (Light) ◄%s\n", get_color("highlight"), "\033[0m");
         } else {
-            printf("   light (Claro)\n");
+            printf("   %sClaro (Light)%s\n", get_color("foreground"), "\033[0m");
         }
 
         // Cyberpunk theme
         if (opcao_tema == 2) {
-            printf("  %s► \033[1mcyberpunk (Cyberpunk)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+            printf("  %s► Cyberpunk (Neon) ◄%s\n", get_color("highlight"), "\033[0m");
         } else {
-            printf("   cyberpunk (Cyberpunk)\n");
+            printf("   %sCyberpunk (Neon)%s\n", get_color("foreground"), "\033[0m");
         }
 
-        printf("\n%s  %s  %s\n",
-               get_string("Navegar ↑↓"),
-               get_string("Selecionar: Enter"),
-               get_string("Sair: ESC"));
+        printf("\n");
+        print_with_color(get_color("accent"), get_string("Navegar ↑↓"));
+        printf("  ");
+        print_with_color(get_color("accent"), get_string("Selecionar: Enter"));
+        printf("  ");
+        print_with_color(get_color("accent"), get_string("Sair: ESC"));
+        printf("\n");
 
         int tecla = ler_tecla();
         switch(tecla) {
@@ -160,6 +183,7 @@ void mostrar_menu_temas() {
                 } else if (opcao_tema == 2) {
                     load_theme("cyberpunk");
                 }
+                current_theme = opcao_tema;
                 restaurar_terminal();
                 return;
             case 27: // ESC
@@ -175,28 +199,42 @@ void mostrar_menu_idiomas() {
 
     while(1) {
         limpar_tela();
-        printf("\033[1;36m🌐 Idiomas\033[0m\n\n");
+        apply_theme_colors();
+        print_with_color(get_color("accent"), "🌐 Idiomas");
+        printf("\n\n");
 
-        printf("Idiomas disponíveis:\n");
+        print_with_color(get_color("foreground"), "Idiomas disponíveis:");
+        printf("\n\n");
 
         // Português
         if (opcao_idioma == 0) {
-            printf("  %s► \033[1mpt (Português)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+            printf("  ");
+            print_with_color(get_color("highlight"), "► pt (Português) ◄");
+            printf("\n");
         } else {
-            printf("   pt (Português)\n");
+            printf("   ");
+            print_with_color(get_color("foreground"), "pt (Português)");
+            printf("\n");
         }
 
         // English
         if (opcao_idioma == 1) {
-            printf("  %s► \033[1men (English)\033[0m %s◄\033[0m\n", get_color("highlight"), get_color("highlight"));
+            printf("  ");
+            print_with_color(get_color("highlight"), "► en (English) ◄");
+            printf("\n");
         } else {
-            printf("   en (English)\n");
+            printf("   ");
+            print_with_color(get_color("foreground"), "en (English)");
+            printf("\n");
         }
 
-        printf("\n%s  %s  %s\n",
-               get_string("Navegar ↑↓"),
-               get_string("Selecionar: Enter"),
-               get_string("Sair: ESC"));
+        printf("\n");
+        print_with_color(get_color("accent"), get_string("Navegar ↑↓"));
+        printf("  ");
+        print_with_color(get_color("accent"), get_string("Selecionar: Enter"));
+        printf("  ");
+        print_with_color(get_color("accent"), get_string("Sair: ESC"));
+        printf("\n");
 
         int tecla = ler_tecla();
         switch(tecla) {
