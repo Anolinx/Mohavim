@@ -162,13 +162,6 @@ src/
 ├── Makefile         → sistema de compilação
 └── mohavim          → executável compilado
 
-translations/        → arquivos de tradução
-├── pt.json         → strings em português
-└── en.json         → strings em inglês
-
-themes/             → configurações de temas
-└── themes.json     → definições de cores
-
 plugins/            → plugins de terceiros
 └── exemplo.so      → plugin exemplo
 
