@@ -17,6 +17,15 @@ void editor_simples(char* nome_arquivo) {
     int cursor = 0;
     int modificado = 0;
     
+    // Variables for clipboard and undo functionality
+    char clipboard[10000] = "";
+    char undo_buffer[10000] = "";
+    int undo_cursor = 0;
+    int undo_buffer_len = 0;
+    int has_undo = 0;
+    int selection_start = -1; // -1 means no selection
+    int selection_end = -1;
+    
     // Carregar arquivo se existir - COM CORREÇÃO DE SEGURANÇA
     FILE* arquivo = fopen(nome_arquivo, "r");
     if (arquivo) {
@@ -46,6 +55,9 @@ void editor_simples(char* nome_arquivo) {
                 coluna_atual++;
             }
         }
+        
+        // Apply background color consistently
+        printf("%s%s", get_current_background(), get_current_foreground());
         
         printf("%s%s\033[0m - \033[1m%s\033[0m %s\n", get_color("accent"), get_string("editor_title"), nome_arquivo, 
                modificado ? get_string("modified") : get_string("saved"));
@@ -81,16 +93,29 @@ void editor_simples(char* nome_arquivo) {
         for (int i = inicio_linha; i < buffer_len && linhas_mostradas < 15; i++) {
             if (i == inicio_linha || (i > 0 && buffer[i-1] == '\n')) {
                 printf("\033[2m%3d\033[0m \033[2m│\033[0m ", linha_exibida);
+                // Reapply background and foreground colors after escape sequences
+                printf("%s%s", get_current_background(), get_current_foreground());
             }
             
             if (i == cursor) {
-                printf("\033[4m \033[0m"); // Cursor com underline
+                // Improved cursor with inverted colors
+                if (buffer[i] == '\n' || cursor >= buffer_len) {
+                    // For newline or end of buffer, show block cursor
+                    printf("\033[7m \033[0m");
+                } else {
+                    // For regular characters, show inverted character
+                    printf("\033[7m%c\033[0m", buffer[i]);
+                }
+                // Reapply background and foreground colors after escape sequences
+                printf("%s%s", get_current_background(), get_current_foreground());
             }
             
             if (buffer[i] == '\n') {
                 printf("\n");
                 linha_exibida++;
                 linhas_mostradas++;
+                // Reapply background and foreground colors after new line
+                printf("%s%s", get_current_background(), get_current_foreground());
             } else {
                 printf("%c", buffer[i]);
             }
@@ -98,15 +123,31 @@ void editor_simples(char* nome_arquivo) {
         
         // Se cursor está no final, mostrar ele
         if (cursor >= buffer_len) {
-            printf("\033[4m \033[0m");
+            printf("\033[7m \033[0m");
+            // Reapply background and foreground colors after escape sequences
+            printf("%s%s", get_current_background(), get_current_foreground());
         }
         
+        // Ensure background color is applied to the rest of the screen
+        printf("\033[0m%s%s\033[K", get_current_background(), get_current_foreground());
+        // Fill the rest of the screen with background color to prevent transparency
+        for (int i = linhas_mostradas; i < 25; i++) {
+            printf("\n%s%s\033[K", get_current_background(), get_current_foreground());
+        }
+        printf("\033[%d;1H", 25); // Position cursor at the bottom for status line
+        
+        // Apply background color consistently to all lines
+        printf("%s%s", get_current_background(), get_current_foreground());
+        
         printf("\n\n");
-        printf("%s%s:\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s:\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s:\033[0m \033[1m%d\033[0m %s \033[2m|\033[0m %s\n", 
+        printf("%s%s\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s\033[0m \033[1m%d\033[0m \033[2m|\033[0m %s%s\033[0m \033[1m%d\033[0m %s \033[2m|\033[0m %s\n", 
                get_color("accent"), get_string("line"), linha_atual,
                get_color("accent"), get_string("column"), coluna_atual,
                get_color("accent"), get_string("total"), buffer_len, get_string("chars"),
                modificado ? get_string("modified") : get_string("saved"));
+        
+        // Ensure status line has consistent background
+        printf("%s%s", get_current_background(), get_current_foreground());
         
         int tecla = ler_tecla();
         
@@ -191,8 +232,8 @@ void editor_simples(char* nome_arquivo) {
                 
             case 17: // Ctrl+Q
                 if (modificado) {
-                    printf("\033[2J\033[H");
-                    printf("⚠️  Arquivo modificado! Salvar antes de sair? (s/n): ");
+                    limpar_tela();
+                    printf("%s", get_string("save_before_exit"));
                     restaurar_terminal();
                     int resp = getchar();
                     if (resp == 's' || resp == 'S') {
@@ -206,9 +247,71 @@ void editor_simples(char* nome_arquivo) {
                 restaurar_terminal();
                 return;
                 
-            case 27: // ESC
+            case 27: // ESC - Return to main menu
                 restaurar_terminal();
                 return;
+                
+            case 3: // Ctrl+C - Copy
+                // Save current state for undo
+                strcpy(undo_buffer, buffer);
+                undo_cursor = cursor;
+                undo_buffer_len = buffer_len;
+                has_undo = 1;
+                
+                // If there's a selection, copy it to clipboard
+                if (selection_start != -1 && selection_end != -1) {
+                    int start = (selection_start < selection_end) ? selection_start : selection_end;
+                    int end = (selection_start < selection_end) ? selection_end : selection_start;
+                    int copy_len = end - start;
+                    if (copy_len < sizeof(clipboard) - 1) {
+                        strncpy(clipboard, buffer + start, copy_len);
+                        clipboard[copy_len] = '\0';
+                    }
+                } else {
+                    // If no selection, copy the current line
+                    int line_start = cursor;
+                    while (line_start > 0 && buffer[line_start - 1] != '\n') {
+                        line_start--;
+                    }
+                    int line_end = cursor;
+                    while (line_end < buffer_len && buffer[line_end] != '\n') {
+                        line_end++;
+                    }
+                    int copy_len = line_end - line_start;
+                    if (copy_len < sizeof(clipboard) - 1) {
+                        strncpy(clipboard, buffer + line_start, copy_len);
+                        clipboard[copy_len] = '\0';
+                    }
+                }
+                break;
+                
+            case 22: // Ctrl+V - Paste
+                // Save current state for undo
+                strcpy(undo_buffer, buffer);
+                undo_cursor = cursor;
+                undo_buffer_len = buffer_len;
+                has_undo = 1;
+                
+                // Paste clipboard content at cursor position
+                if (strlen(clipboard) > 0 && buffer_len + strlen(clipboard) < sizeof(buffer) - 1) {
+                    memmove(&buffer[cursor + strlen(clipboard)], &buffer[cursor], buffer_len - cursor + 1);
+                    memcpy(&buffer[cursor], clipboard, strlen(clipboard));
+                    cursor += strlen(clipboard);
+                    buffer_len += strlen(clipboard);
+                    modificado = 1;
+                }
+                break;
+                
+            case 26: // Ctrl+Z - Undo
+                // Restore previous state
+                if (has_undo) {
+                    strcpy(buffer, undo_buffer);
+                    cursor = undo_cursor;
+                    buffer_len = undo_buffer_len;
+                    modificado = 1;
+                    has_undo = 0;
+                }
+                break;
                 
             case 'l':
             case 'L': // Mostrar logs
@@ -219,6 +322,12 @@ void editor_simples(char* nome_arquivo) {
                 
             case 127: // Backspace
                 if (cursor > 0) {
+                    // Save current state for undo
+                    strcpy(undo_buffer, buffer);
+                    undo_cursor = cursor;
+                    undo_buffer_len = buffer_len;
+                    has_undo = 1;
+                    
                     memmove(&buffer[cursor - 1], &buffer[cursor], buffer_len - cursor + 1);
                     cursor--;
                     buffer_len--;
@@ -228,6 +337,12 @@ void editor_simples(char* nome_arquivo) {
                 
             case 10: // Enter
                 if (buffer_len < (int)sizeof(buffer) - 1) {
+                    // Save current state for undo
+                    strcpy(undo_buffer, buffer);
+                    undo_cursor = cursor;
+                    undo_buffer_len = buffer_len;
+                    has_undo = 1;
+                    
                     memmove(&buffer[cursor + 1], &buffer[cursor], buffer_len - cursor + 1);
                     buffer[cursor] = '\n';
                     cursor++;
@@ -239,6 +354,12 @@ void editor_simples(char* nome_arquivo) {
             default:
                 // Inserir caractere normal
                 if (tecla >= 32 && tecla <= 126 && buffer_len < (int)sizeof(buffer) - 1) {
+                    // Save current state for undo
+                    strcpy(undo_buffer, buffer);
+                    undo_cursor = cursor;
+                    undo_buffer_len = buffer_len;
+                    has_undo = 1;
+                    
                     memmove(&buffer[cursor + 1], &buffer[cursor], buffer_len - cursor + 1);
                     buffer[cursor] = tecla;
                     cursor++;
@@ -251,9 +372,9 @@ void editor_simples(char* nome_arquivo) {
 }
 
 void novo_arquivo() {
-    printf("\033[2J\033[H");
-    printf("\033[1;36m📝 CRIAR NOVO ARQUIVO\033[0m\n\n");
-    printf("Nome do arquivo: ");
+    limpar_tela();
+    printf("\033[1;36m%s\033[0m\n\n", get_string("create_new_file_title"));
+    printf("%s ", get_string("filename_prompt_new"));
     
     char nome[256];
     restaurar_terminal();

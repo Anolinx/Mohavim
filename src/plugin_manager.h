@@ -14,6 +14,7 @@ typedef struct {
     bool loaded;
     void (*init_func)(void);
     void (*cleanup_func)(void);
+    void (*run_func)(void);
 } plugin_t;
 
 extern plugin_t plugins[MAX_PLUGINS];

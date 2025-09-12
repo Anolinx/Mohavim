@@ -1,0 +1,303 @@
+#define _GNU_SOURCE
+#include "files.h"
+#include "editor.h"
+#include "ui.h"
+#include "log.h"
+#include "theme.h"
+#include "i18n.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+#include <unistd.h>
+
+char arquivos[100][256];
+int total_arquivos = 0;
+
+void carregar_lista_arquivos() {
+    total_arquivos=0;
+    DIR* dir = opendir(".");
+    if(dir){
+        struct dirent* entry;
+        while((entry=readdir(dir)) && total_arquivos<99){
+            if(entry->d_type==DT_REG){
+                strcpy(arquivos[total_arquivos], entry->d_name);
+                total_arquivos++;
+            }
+        }
+        closedir(dir);
+        log_message(LOG_DEBUG, "%s", get_string("files_loaded_in_dir"));
+    } else {
+        log_message(LOG_ERROR, "%s", get_string("error_opening_dir"));
+    }
+}
+
+void mostrar_lista_arquivos(int selecionado) {
+    limpar_tela();
+    print_with_color(get_color("accent"), (char*)get_string("open_file_title"));
+    printf("\n");
+    print_with_color(get_color("foreground"), (char*)get_string("file_nav_instructions"));
+    printf("\n\n");
+
+    // Mostrar opção para digitar nome manualmente
+    if (selecionado == 0) {
+        print_with_color(get_color("highlight"), "  ► ");
+        print_with_color(get_color("accent"), (char*)get_string("type_filename"));
+        print_with_color(get_color("highlight"), " ◄");
+        printf("\n\n");
+    } else {
+        printf("    ");
+        print_with_color(get_color("accent"), (char*)get_string("type_filename"));
+        printf("\n\n");
+    }
+
+    // Mostrar apenas alguns arquivos por vez para não sobrecarregar a tela
+    int inicio = (selecionado > 10) ? selecionado - 10 : 0;
+    int fim = (inicio + 20 < total_arquivos) ? inicio + 20 : total_arquivos;
+
+    if (inicio > 0) {
+        printf("    ");
+        print_with_color(get_color("foreground"), (char*)get_string("previous_files"));
+        printf(" (%d", inicio);
+        printf(")\n");
+    }
+
+    for (int i = inicio; i < fim; i++) {
+        if (i + 1 == selecionado) {
+            print_with_color(get_color("highlight"), "  ► ");
+            print_with_color(get_color("accent"), "📄 ");
+            printf("%s", arquivos[i]);
+            print_with_color(get_color("highlight"), " ◄");
+            printf("\n");
+        } else {
+            printf("    📄 %s\n", arquivos[i]);
+        }
+    }
+
+    if (fim < total_arquivos) {\n        printf(\"    \");\n        print_with_color(get_color(\"foreground\"), (char*)get_string(\"remaining_files\"));\n        printf(\" (%d\", total_arquivos - fim);\n        printf(\")\\n\");\n    }
+
+    printf("\n");
+    char file_of_text[128];
+    if (selecionado == 0) {
+        // For "new file" option, show as item 0 of total_arquivos+1
+        snprintf(file_of_text, sizeof(file_of_text), get_string("file_of"), selecionado, total_arquivos + 1);
+    } else {
+        // For actual files, show as item selecionado of total_arquivos+1
+        snprintf(file_of_text, sizeof(file_of_text), get_string("file_of"), selecionado, total_arquivos + 1);
+    }
+    print_with_color(get_color("accent"), file_of_text);
+    printf("\n");
+}
+
+void abrir_arquivo() {
+    carregar_lista_arquivos();
+
+    int opcao_atual = 0;
+    int max_opcoes = total_arquivos + 1; // +1 para opção de digitar nome
+
+    configurar_terminal();
+
+    while (1) {
+        mostrar_lista_arquivos(opcao_atual);
+
+        int tecla = ler_tecla();
+
+        switch (tecla) {
+            case 65: // Seta cima
+                opcao_atual = (opcao_atual - 1 + max_opcoes) % max_opcoes;
+                break;
+
+            case 66: // Seta baixo
+                opcao_atual = (opcao_atual + 1) % max_opcoes;
+                break;
+
+            case 10: // Enter
+                restaurar_terminal();
+                if (opcao_atual == 0) {
+                    // Opção para digitar nome
+                    limpar_tela();
+                    print_with_color(get_color("accent"), (char*)get_string("type_filename_title"));
+                    printf("\n\n");
+                    print_with_color(get_color("foreground"), (char*)get_string("filename_prompt"));
+                    printf(" ");
+
+                    char nome[256];
+                    if (fgets(nome, sizeof(nome), stdin)) {
+                        nome[strcspn(nome, "\n")] = 0;
+                        if (strlen(nome) > 0) {
+                            editor_simples(nome);
+                        }
+                    }
+                } else {
+                    // Arquivo selecionado da lista
+                    editor_simples(arquivos[opcao_atual - 1]);
+                }
+                return;
+
+            case 27: // ESC
+                restaurar_terminal();
+                return;
+
+            case 'd':
+            case 'D': // Deletar arquivo
+                if (opcao_atual > 0) { // Não pode deletar a opção "Digite nome do arquivo"
+                    char* nome_arquivo = arquivos[opcao_atual - 1];
+
+                    // Mostrar confirmação
+                    limpar_tela();
+                    print_with_color(get_color("error"), (char*)get_string("delete_file_title"));
+                    printf("\n\n");
+                    print_with_color(get_color("foreground"), (char*)get_string("confirm_delete"));
+                    printf("\n");
+                    print_with_color(get_color("accent"), "📄 ");
+                    printf("%s\n\n", nome_arquivo);
+                    print_with_color(get_color("error"), (char*)get_string("cannot_undo"));
+                    printf("\n\n");
+                    print_with_color(get_color("foreground"), (char*)get_string("confirm_prompt"));
+                    print_with_color(get_color("success"), "'SIM'");
+                    print_with_color(get_color("foreground"), " para confirmar ou qualquer tecla para cancelar: ");
+
+                    restaurar_terminal();
+                    char confirmacao[10];
+                    if (fgets(confirmacao, sizeof(confirmacao), stdin)) {
+                        confirmacao[strcspn(confirmacao, "\n")] = 0;
+
+                        if (strcmp(confirmacao, "SIM") == 0) {
+                            if (remove(nome_arquivo) == 0) {
+                                printf("\n");
+                                printf("%s", (char*)get_string("file_deleted"));
+                                printf("\n");
+                                log_message(LOG_INFO, "%s", get_string("file_deleted_success"));
+
+                                // Recarregar lista de arquivos
+                                carregar_lista_arquivos();
+                                max_opcoes = total_arquivos + 1;
+
+                                // Ajustar seleção se necessário
+                                if (opcao_atual > max_opcoes - 1) {
+                                    opcao_atual = max_opcoes - 1;
+                                }
+
+                            } else {
+                                print_with_color(get_color("error"), "❌ ");
+                                printf("%s", (char*)get_string("error_deleting_file"));
+                                print_with_color(get_color("error"), " '");
+                                printf("%s", nome_arquivo);
+                                print_with_color(get_color("error"), "'!");
+                                printf("\n");
+                                log_message(LOG_ERROR, "%s", get_string("error_deleting_file_log"));
+                            }
+                        } else {
+                            printf("\n");
+                            printf("%s", (char*)get_string("operation_cancelled"));
+                            printf("\n");
+                            log_message(LOG_INFO, "%s", get_string("file_delete_cancelled"));
+                        }
+
+                        printf("\n");
+                        if (current_language == 1) { // English
+                            print_with_color(get_color("highlight"), "Press Enter to continue...");
+                        } else {
+                            print_with_color(get_color("highlight"), "Pressione Enter para continuar...");
+                        }
+                        printf("...");
+                        getchar();
+                        configurar_terminal();
+                    }
+                }
+                break;
+        }
+    }
+}
+
+void buscar_arquivo() {
+    log_message(LOG_DEBUG, "%s", get_string("starting_file_search"));
+    limpar_tela();
+    print_with_color(get_color("accent"), get_string("search_file_title"));
+    printf("\n\n");
+    print_with_color(get_color("foreground"), get_string("filename_prompt_new"));
+    printf(" ");
+
+    char nome[256];
+    restaurar_terminal();
+    if (fgets(nome, sizeof(nome), stdin)) {
+        nome[strcspn(nome, "\n")] = 0;
+
+        if (strlen(nome) == 0) {
+            log_message(LOG_WARNING, "%s", get_string("empty_filename_for_search"));
+            printf("\n");
+            printf("%s", get_string("filename_empty"));
+            printf("\n");
+            printf("\n");
+            print_with_color(get_color("highlight"), get_string("press_enter_continue"));
+            printf("...");
+            getchar();
+            return;
+        }
+
+        print_with_color(get_color("foreground"), get_string("search_text_prompt"));
+        printf(" ");
+        char busca[256];
+        if (fgets(busca, sizeof(busca), stdin)) {
+            busca[strcspn(busca, "\n")] = 0;
+
+            if (strlen(busca) == 0) {
+                log_message(LOG_WARNING, "%s", get_string("empty_search_text"));
+                printf("\n");
+                printf("%s", get_string("search_text_empty"));
+                printf("\n");
+                printf("\n");
+                print_with_color(get_color("highlight"), get_string("press_enter_continue"));
+                printf("...");
+                getchar();
+                return;
+            }
+
+            FILE* arquivo = fopen(nome, "r");
+            if (arquivo) {
+                log_message(LOG_INFO, "%s", get_string("searching_for_in_file"));
+                char linha[1024];
+                int num_linha = 1;
+                int encontradas = 0;
+
+                printf("\n");
+                print_with_color(get_color("accent"), get_string("search_results"));
+                printf(" '");
+                printf("%s", nome);
+                print_with_color(get_color("accent"), "':");
+                printf("\n\n");
+
+                while (fgets(linha, sizeof(linha), arquivo)) {
+                    if (strstr(linha, busca)) {
+                        printf("Linha %d: %s", num_linha, linha);
+                        encontradas++;
+                    }
+                    num_linha++;
+                }
+
+                if (encontradas == 0) {\n                    printf(\"%s\", get_string(\"text_not_found\"));\n                    printf(\" '\");\n                    printf(\"%s\", busca);\n                    printf(\"'\");\n                    printf(\"\\n\");\n                    log_message(LOG_INFO, \"%s\", get_string(\"text_not_found_in_file\"));\n
+                } else {
+                    printf("\n");
+                    printf("%s", get_string("occurrences_found"));
+                    printf("\n");
+                    log_message(LOG_INFO, "%s", get_string("occurrences_found_in_file"));
+                }
+
+                fclose(arquivo);
+            } else {
+                printf("%s", get_string("error_opening_file"));
+                printf(" '");
+                printf("%s", nome);
+                printf("'");
+                printf("\n");
+                log_message(LOG_ERROR, "%s", get_string("error_opening_file_for_search"));
+            }
+        }
+    }
+
+    printf("\n");
+    print_with_color(get_color("highlight"), get_string("press_enter_continue"));
+    printf("...");
+    getchar();
+    configurar_terminal(); // Restaurar terminal after operations
+}

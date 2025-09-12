@@ -175,14 +175,39 @@ install.sh          → script de instalação
 
 O Mohavim suporta múltiplos idiomas através do sistema i18n:
 
-- **Português (pt)**: Idioma padrão
+- **Português (pt_br)**: Idioma padrão
 - **English (en)**: Tradução completa
 - **Extensível**: Fácil adição de novos idiomas
 
+### Configurando o idioma:
+
+Você pode configurar o idioma de várias maneiras:
+
+1. **Variável de ambiente**:
+   ```bash
+   export LANGUAGE=en
+   mohavim
+   ```
+
+2. **Arquivo de configuração**:
+   Crie um arquivo `.mohavimrc` no seu diretório home:
+   ```bash
+   echo "language=en" > ~/.mohavimrc
+   ```
+
+3. **Linha de comando**:
+   ```bash
+   mohavim --lang en
+   ```
+
+Ordem de prioridade: linha de comando > variável de ambiente > arquivo de configuração > padrão (português)
+
 ### Adicionando novos idiomas:
-1. Crie arquivo `translations/codigo_idioma.json`
-2. Traduza todas as strings necessárias
-3. Use `mohavim --lang codigo_idioma`
+1. Edite `src/i18n.c`
+2. Adicione uma nova seção de idioma na função `init_i18n()`
+3. Use um código de idioma único
+4. Traduza todas as strings
+5. Recompile o Mohavim
 
 🎨 Sistema de Temas
 
@@ -190,12 +215,15 @@ Três temas incluídos:
 
 - **Dark**: Tema escuro padrão
 - **Light**: Tema claro
-- **Cyberpunk**: Tema futurista com cores neon
+- **Cyberpunk**: Tema futurista com cores vibrantes
+- **Vaporwave**: Tema com cores vibrantes
+
+A interface web também suporta a seleção de temas através de um seletor na página principal.
 
 ### Criando novos temas:
-1. Edite `themes/themes.json`
+1. Edite `themes.json`
 2. Adicione nova configuração de cores
-3. Use `mohavim --theme nome_tema`
+3. Use `mohavim --theme nome_tema` ou selecione no seletor da interface web
 
 🔌 Sistema de Plugins
 

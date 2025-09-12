@@ -1,0 +1,10 @@
+    // Plugin translations
+    add_language_string(1, "plugin_system_started", "Plugin system started");
+    add_language_string(1, "max_plugins_reached", "Maximum plugin limit reached");
+    add_language_string(1, "plugin_already_loaded", "Plugin '%s' is already loaded");
+    add_language_string(1, "error_loading_plugin", "Error loading plugin '%s': %s");
+    add_language_string(1, "plugin_no_init_func", "Plugin '%s' has no plugin_init function");
+    add_language_string(1, "plugin_loaded_success", "Plugin '%s' loaded successfully");
+    add_language_string(1, "plugin_unloaded", "Plugin '%s' unloaded");
+    add_language_string(1, "plugin_not_found", "Plugin '%s' not found");
+    add_language_string(1, "loaded_plugins", "Loaded plugins:");

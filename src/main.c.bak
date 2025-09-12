@@ -23,6 +23,11 @@ void show_help() {
     printf("  mohavim --lang en --theme cyberpunk\n");
     printf("  mohavim --verbose\n");
     printf("  mohavim --install-plugin myplugin\n");
+    printf("\n%s\n", get_string("language_config"));
+    printf("%s\n", get_string("language_config_desc"));
+    printf("%s\n", get_string("env_var"));
+    printf("%s\n", get_string("config_file"));
+    printf("%s\n", get_string("cmd_line"));
 }
 
 int main(int argc, char* argv[]) {
@@ -32,45 +37,20 @@ int main(int argc, char* argv[]) {
     init_logging();
     init_plugin_manager();
 
-    // Carregar configurações salvas antes de processar argumentos da linha de comando
-    const char* saved_language = get_language_from_config();
-    if (saved_language != NULL) {
-        load_language(saved_language);
-        log_message(LOG_INFO, "Idioma carregado da configuração: %s", saved_language);
-    }
-    
-    const char* saved_theme = get_theme_from_config();
-    if (saved_theme != NULL) {
-        load_theme(saved_theme);
-        log_message(LOG_INFO, "Tema carregado da configuração: %s", saved_theme);
-    }
-
-    // Create an array to track which arguments have been processed
-    int processed[argc];
-    for (int i = 0; i < argc; i++) {
-        processed[i] = 0;
-    }
-
-    // Processar argumentos de linha de comando primeiro para --lang
+    // Processar argumentos de linha de comando
+    int language_set = 0;
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--lang") == 0 && i + 1 < argc) {
+        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            show_help();
+            return 0;
+        }
+        else if (strcmp(argv[i], "--lang") == 0 && i + 1 < argc) {
             if (!load_language(argv[++i])) {
                 printf("%s '%s'\n", get_string("language_not_found"), argv[i]);
                 return 1;
             }
+            language_set = 1;
             log_message(LOG_INFO, "Idioma alterado para: %s", argv[i]);
-            processed[i-1] = 1; // Mark --lang as processed
-            processed[i] = 1;   // Mark language code as processed
-        }
-    }
-
-    // Processar novamente para outras opções
-    for (int i = 1; i < argc; i++) {
-        if (processed[i]) continue; // Skip already processed arguments
-
-        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            show_help();
-            return 0;
         }
         else if (strcmp(argv[i], "--theme") == 0 && i + 1 < argc) {
             if (!load_theme(argv[++i])) {
@@ -78,24 +58,16 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             log_message(LOG_INFO, "Tema alterado para: %s", argv[i]);
-            processed[i-1] = 1; // Mark --theme as processed
-            processed[i] = 1;   // Mark theme name as processed
         }
         else if (strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0) {
             toggle_verbose_mode();
-            processed[i] = 1;   // Mark --verbose as processed
         }
         else if (strcmp(argv[i], "--install-plugin") == 0 && i + 1 < argc) {
-            if (load_plugin(argv[++i])) {
-                printf("%s '%s'\n", get_string("plugin_installed"), argv[i]);
-            }
-            processed[i-1] = 1; // Mark --install-plugin as processed
-            processed[i] = 1;   // Mark plugin name as processed
+            if (load_plugin(argv[++i])) {\n                printf("%s '%s'\\n", get_string("plugin_installed"), argv[i]);\n            }
             return 0;
         }
         else if (strcmp(argv[i], "--list-plugins") == 0) {
             list_plugins();
-            processed[i] = 1;   // Mark --list-plugins as processed
             return 0;
         }
         else {
@@ -104,10 +76,15 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+    
+    // If no language was set via command line, auto-detect
+    if (!language_set) {
+        auto_detect_language();
+    }
 
     int opcao_atual=0;
     mostrar_logo();
-    printf("\nPressione Enter para continuar..."); getchar();
+    printf("\n%s", get_string("press_enter_continue")); getchar();
     configurar_terminal();
 
     while(1){
@@ -126,11 +103,11 @@ int main(int argc, char* argv[]) {
                     case 5: mostrar_menu_idiomas(); break;
                     case 6: manage_plugins_menu(); break;
                     case 7: sobre(); break;
-                    case 8: printf("\033[2J\033[H🚪 Saindo...\n💀 Obrigado por usar o Mohavim!\n"); exit(0);
+                    case 8: limpar_tela(); print_with_color(get_color("accent"), get_string("exiting")); printf("\n%s\n", get_string("thanks")); exit(0);
                 }
                 configurar_terminal();
                 break;
-            case 27: restaurar_terminal(); printf("\033[2J\033[H🚪 Saindo...\n💀 Obrigado por usar o Mohavim!\n"); exit(0);
+            case 27: restaurar_terminal(); limpar_tela(); print_with_color(get_color("accent"), get_string("exiting")); printf("\n%s\n", get_string("thanks")); exit(0);
         }
     }
     return 0;

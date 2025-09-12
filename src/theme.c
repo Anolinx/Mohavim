@@ -28,16 +28,25 @@ void init_themes() {
     strcpy(themes[1].error, "\033[38;2;202;18;67m");         // Vermelho intenso
     strcpy(themes[1].success, "\033[38;2;34;134;58m");       // Verde intenso
     
-    // Tema Cyberpunk
-    strcpy(themes[2].name, "cyberpunk");
-    strcpy(themes[2].background, "\033[48;2;13;17;23m");     // Fundo preto azulado
-    strcpy(themes[2].foreground, "\033[38;2;0;255;146m");    // Verde neon
-    strcpy(themes[2].accent, "\033[38;2;0;255;255m");        // Ciano neon
-    strcpy(themes[2].highlight, "\033[48;2;255;20;147m\033[38;2;0;0;0m"); // Fundo magenta neon com texto preto
-    strcpy(themes[2].error, "\033[38;2;255;20;147m");        // Magenta neon
-    strcpy(themes[2].success, "\033[38;2;0;255;146m");       // Verde neon
+    // Tema Vaporwave
+    strcpy(themes[2].name, "vaporwave");
+    strcpy(themes[2].background, "\033[48;2;25;20;40m");      // Fundo roxo escuro
+    strcpy(themes[2].foreground, "\033[38;2;255;105;180m");   // Rosa vibrante
+    strcpy(themes[2].accent, "\033[38;2;0;255;255m");         // Ciano elétrico
+    strcpy(themes[2].highlight, "\033[48;2;128;0;128m\033[38;2;255;255;0m"); // Fundo roxo com texto amarelo
+    strcpy(themes[2].error, "\033[38;2;255;20;147m");         // Rosa choque
+    strcpy(themes[2].success, "\033[38;2;0;255;127m");        // Verde menta
     
-    theme_count = 3;
+    // Tema Vintage
+    strcpy(themes[3].name, "vintage");
+    strcpy(themes[3].background, "\033[48;2;245;245;220m");   // Fundo creme
+    strcpy(themes[3].foreground, "\033[38;2;139;69;19m");     // Marrom chocolate
+    strcpy(themes[3].accent, "\033[38;2;160;82;45m");         // Sienna
+    strcpy(themes[3].highlight, "\033[48;2;210;180;140m\033[38;2;0;0;0m"); // Fundo bege com texto preto
+    strcpy(themes[3].error, "\033[38;2;178;34;34m");          // Firebrick vermelho
+    strcpy(themes[3].success, "\033[38;2;0;100;0m");          // Verde escuro
+    
+    theme_count = 4;
     current_theme = 0;
 }
 
@@ -66,12 +75,42 @@ const char* get_color(const char *type) {
     return "\033[0m";
 }
 
+const char* get_background_color() {
+    if (current_theme < 0 || current_theme >= theme_count) {
+        return "\033[48;2;40;44;52m"; // Default to dark theme background
+    }
+    return themes[current_theme].background;
+}
+
 void apply_theme_colors() {
     // Reset completo antes de aplicar novas cores
     printf("\033[0m");
     // Aplicar cor de fundo e texto padrão
     printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+    // Garantir que o fundo seja aplicado a toda a tela
+    printf("\033[2J\033[H");
+    // Set background color to be applied to all new lines and prevent transparency
+    printf("%s\033[K", themes[current_theme].background);
+    // Fill the screen with background color to prevent transparency
+    for (int i = 0; i < 30; i++) {
+        printf("\n%s\033[K", themes[current_theme].background);
+    }
+    printf("\033[H"); // Return cursor to top
     fflush(stdout);
+}
+
+const char* get_current_background() {
+    if (current_theme < 0 || current_theme >= theme_count) {
+        return "\033[48;2;40;44;52m"; // Default to dark theme background
+    }
+    return themes[current_theme].background;
+}
+
+const char* get_current_foreground() {
+    if (current_theme < 0 || current_theme >= theme_count) {
+        return "\033[38;2;171;178;191m"; // Default to dark theme foreground
+    }
+    return themes[current_theme].foreground;
 }
 
 void reset_colors() {
@@ -81,6 +120,6 @@ void reset_colors() {
 
 void print_with_color(const char* color, const char* text) {
     printf("%s%s\033[0m", color, text);
-    printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+    printf("%s\033[K", themes[current_theme].background);
     fflush(stdout);
 }
