@@ -18,6 +18,7 @@ void configurar_terminal() {
     tcgetattr(STDIN_FILENO, &old_termios);
     struct termios new_termios = old_termios;
     new_termios.c_lflag &= ~(ICANON | ECHO);
+    new_termios.c_iflag &= ~(IXON); // Disable flow control (Ctrl+S/Ctrl+Q)
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
 }
 void restaurar_terminal() {
@@ -26,12 +27,23 @@ void restaurar_terminal() {
 int ler_tecla() {
     int ch = getchar();
     if (ch == 27) { // ESC sequence
-        int next = getchar();
-        if (next == 91) { // '['
-            return getchar(); // Return the actual arrow key code
+        int next1 = getchar();
+        if (next1 == 91) { // '['
+            int next2 = getchar();
+            switch (next2) {
+                case 65: return 65;  // Seta para cima
+                case 66: return 66;  // Seta para baixo
+                case 67: return 67;  // Seta para direita
+                case 68: return 68;  // Seta para esquerda
+                default: 
+                    // Se não for uma seta, colocar de volta no buffer
+                    ungetc(next2, stdin);
+                    ungetc(next1, stdin);
+                    return 27;
+            }
         }
         // Se não for '[', é ESC puro
-        ungetc(next, stdin);
+        ungetc(next1, stdin);
         return 27;
     }
     return ch;
@@ -64,13 +76,14 @@ void mostrar_menu(int opcao) {
         (char*)get_string("search_file"),
         (char*)get_string("logs"),
         (char*)get_string("themes"),
+        (char*)get_string("cursors"),
         (char*)get_string("languages"),
         (char*)get_string("plugins"),
         (char*)get_string("about"),
         (char*)get_string("exit")
     };
 
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 10; i++) {
         if (i == opcao) {
             printf("  %s► %s ◄\033[0m", get_color("highlight"), opcoes[i]);
             printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
@@ -80,12 +93,8 @@ void mostrar_menu(int opcao) {
         }
     }
 
-    printf("\n%s%s\033[0m", get_color("accent"), get_string("navigate"));
+    printf("\n%s%s\033[0m\n", get_color("accent"), get_string("navigate"));
     printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
-    printf("  %s%s\033[0m", get_color("accent"), get_string("select_enter"));
-    printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
-    printf("  %s%s\033[0m", get_color("accent"), get_string("exit_esc"));
-    printf("%s%s\n", themes[current_theme].background, themes[current_theme].foreground);
 }
 
 void sobre() {
@@ -101,7 +110,6 @@ void sobre() {
     printf("\n%s%s\n", get_color("accent"), get_string("available_shortcuts"));
     printf("%s%s\n", get_color("foreground"), get_string("navigation_keys"));
     printf("%s%s\n", get_color("foreground"), get_string("save_shortcut"));  
-    printf("%s%s\n", get_color("foreground"), get_string("exit_shortcut"));
     printf("%s%s\n", get_color("foreground"), get_string("menu_shortcut"));
     printf("%s%s\n", get_color("foreground"), get_string("newline_shortcut"));
     printf("%s%s\n", get_color("foreground"), get_string("delete_shortcut"));
@@ -267,6 +275,75 @@ void mostrar_menu_idiomas() {
                 }
                 // Verify language consistency after change
                 verify_language_consistency();
+                restaurar_terminal();
+                return;
+            case 27: // ESC
+                restaurar_terminal();
+                return;
+        }
+    }
+}
+
+void mostrar_menu_cursores() {
+    int opcao_cursor = get_cursor_type();
+    configurar_terminal();
+
+    while(1) {
+        limpar_tela();
+        apply_theme_colors();
+        print_with_color(get_color("accent"), (char*)get_string("cursor_title"));
+        printf("\n\n");
+
+        print_with_color(get_color("foreground"), (char*)get_string("available_cursors"));
+        printf("\n\n");
+
+        // Opção 0: Underscore
+        if (opcao_cursor == 0) {
+            printf("  %s► %s ◄\033[0m", get_color("highlight"), get_string("cursor_underscore"));
+            printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+            printf("\n");
+        } else {
+            printf("   ");
+            print_with_color(get_color("foreground"), (char*)get_string("cursor_underscore"));
+            printf("\n");
+        }
+
+        // Opção 1: Pipe
+        if (opcao_cursor == 1) {
+            printf("  %s► %s ◄\033[0m", get_color("highlight"), get_string("cursor_pipe"));
+            printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+            printf("\n");
+        } else {
+            printf("   ");
+            print_with_color(get_color("foreground"), (char*)get_string("cursor_pipe"));
+            printf("\n");
+        }
+
+        // Opção 2: Block
+        if (opcao_cursor == 2) {
+            printf("  %s► %s ◄\033[0m", get_color("highlight"), get_string("cursor_block"));
+            printf("%s%s", themes[current_theme].background, themes[current_theme].foreground);
+            printf("\n");
+        } else {
+            printf("   ");
+            print_with_color(get_color("foreground"), (char*)get_string("cursor_block"));
+            printf("\n");
+        }
+
+        printf("\n");
+        print_with_color(get_color("accent"), get_string("navigate"));
+        printf("\n");
+
+        int tecla = ler_tecla();
+        switch(tecla) {
+            case 65: // Seta para cima
+                opcao_cursor = (opcao_cursor - 1 + 3) % 3;
+                break;
+            case 66: // Seta para baixo
+                opcao_cursor = (opcao_cursor + 1) % 3;
+                break;
+            case 10: // Enter
+                set_cursor_type(opcao_cursor);
                 restaurar_terminal();
                 return;
             case 27: // ESC

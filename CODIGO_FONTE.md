@@ -35,7 +35,6 @@ O projeto `src/` contém:
 - Programa principal com suporte a argumentos CLI
 - `--lang`: Seleção de idioma (pt, en)
 - `--theme`: Seleção de tema (dark, light, cyberpunk)
-- `--verbose`: Modo debug detalhado
 - `--install-plugin`: Instalação de plugins
 - Inicialização de todos os sistemas (i18n, temas, logs, plugins)
 - Loop de menu com interface multilíngue
@@ -87,7 +86,7 @@ O projeto `src/` contém:
 ### 📋 **log.c/.h** 
 - Sistema de logs interno robusto
 - Buffer circular para eficiência de memória
-- Níveis de log: INFO, WARNING, ERROR, DEBUG
+- Níveis de log: ✅ Info, ⚠️ Warn, ❌ Error, 🐛 Debug
 - Timestamps automáticos
 - Modo verbose para debug
 - API completa para logging
@@ -123,7 +122,6 @@ O projeto `src/` contém:
 - [x] Múltiplos níveis de log
 - [x] Timestamps automáticos
 - [x] Visualização no editor (tecla L)
-- [x] Modo verbose com `--verbose`
 
 ### 🔌 Sistema de Plugins
 - [x] Carregamento dinâmico (.so)
@@ -164,14 +162,11 @@ mohavim
 # Idioma e tema específicos
 mohavim --lang en --theme cyberpunk
 
-# Modo verbose para debug
-mohavim --verbose
-
 # Instalar plugin
 mohavim --install-plugin exemplo
 
 # Combinação de argumentos
-mohavim --lang pt --theme dark --verbose
+mohavim --lang pt --theme dark
 ```
 
 ### Arquivos Gerados:
@@ -265,15 +260,15 @@ mohavim --install-plugin exemplo
 ## 📋 Sistema de Logs
 
 ### Níveis Disponíveis:
-- `LOG_INFO`: Informações gerais
-- `LOG_WARNING`: Avisos não críticos
-- `LOG_ERROR`: Erros críticos
-- `LOG_DEBUG`: Debug detalhado (verbose)
+- `INFO`: ✅ Info - Informações gerais
+- `WARN`: ⚠️ Warn - Avisos não críticos
+- `ERROR`: ❌ Error - Erros críticos
+- `DEBUG`: 🐛 Debug - Debug detalhado (verbose)
 
 ### API de Logging:
 ```c
-log_message(LOG_INFO, "Arquivo salvo: %s", filename);
-log_message(LOG_ERROR, "Erro ao abrir: %s", error);
+log_message(INFO, "Arquivo salvo: %s", filename);
+log_message(ERROR, "Erro ao abrir: %s", error);
 ```
 
 ## 🚀 Roadmap Futuro

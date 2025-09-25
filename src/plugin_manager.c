@@ -15,7 +15,7 @@ int plugin_count = 0;
 
 void init_plugin_manager() {
     plugin_count = 0;
-    log_message(LOG_INFO, "Sistema de plugins iniciado");
+    log_message(INFO, "%s", get_string("plugin_system_started"));
     
     // Criar diretório plugins se não existir
     system("mkdir -p plugins");
@@ -43,14 +43,14 @@ void init_plugin_manager() {
 
 int load_plugin(const char* name) {
     if (plugin_count >= MAX_PLUGINS) {
-        log_message(LOG_ERROR, "Limite máximo de plugins atingido");
+        log_message(ERROR, "%s", get_string("max_plugins_reached"));
         return 0;
     }
     
     // Verificar se já está carregado
     for (int i = 0; i < plugin_count; i++) {
         if (strcmp(plugins[i].name, name) == 0) {
-            log_message(LOG_WARNING, "Plugin '%s' já está carregado", name);
+            log_message(WARN, get_string("plugin_already_loaded"), name);
             return 0;
         }
     }
@@ -62,14 +62,14 @@ int load_plugin(const char* name) {
     // Tentar carregar biblioteca
     void* handle = dlopen(path, RTLD_LAZY);
     if (!handle) {
-        log_message(LOG_ERROR, "Erro ao carregar plugin '%s': %s", name, dlerror());
+        log_message(ERROR, get_string("error_loading_plugin"), name, dlerror());
         return 0;
     }
     
     // Buscar função de inicialização
     void (*init_func)(void) = dlsym(handle, "plugin_init");
     if (!init_func) {
-        log_message(LOG_WARNING, "Plugin '%s' sem função plugin_init", name);
+        log_message(WARN, get_string("plugin_no_init_func"), name);
     }
     
     // Buscar função de limpeza
@@ -93,7 +93,7 @@ int load_plugin(const char* name) {
     }
     
     plugin_count++;
-    log_message(LOG_INFO, "Plugin '%s' carregado com sucesso", name);
+    log_message(INFO, get_string("plugin_loaded_success_log"), name);
     return 1;
 }
 
@@ -112,11 +112,11 @@ void unload_plugin(const char* name) {
             plugins[i].cleanup_func = NULL;
             plugins[i].run_func = NULL;
             
-            log_message(LOG_INFO, "Plugin '%s' descarregado", name);
+            log_message(INFO, get_string("plugin_unloaded_log"), name);
             return;
         }
     }
-    log_message(LOG_WARNING, "Plugin '%s' não encontrado", name);
+    log_message(WARN, get_string("plugin_not_found_log"), name);
 }
 
 void list_plugins() {
@@ -219,10 +219,10 @@ void manage_plugins_menu() {
                         if (strlen(nome) > 0) {
                             if (load_plugin(nome)) {
                                 printf("\n✅ %s\n", get_string("plugin_loaded_success"));
-                                log_message(LOG_INFO, "Plugin '%s' carregado com sucesso", nome);
+                                log_message(INFO, get_string("plugin_loaded_success_log"), nome);
                             } else {
                                 printf("\n❌ %s\n", get_string("error_loading_plugin"));
-                                log_message(LOG_ERROR, "Erro ao carregar plugin '%s'", nome);
+                                log_message(ERROR, get_string("error_loading_plugin"), nome);
                             }
                         }
                     }

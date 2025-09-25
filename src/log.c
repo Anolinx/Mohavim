@@ -10,13 +10,11 @@
 log_entry_t log_buffer[MAX_LOG_ENTRIES];
 int log_count = 0;
 int log_start = 0;
-bool verbose_mode = false;
 
 void init_logging() {
     log_count = 0;
     log_start = 0;
-    verbose_mode = false;
-    log_message(LOG_INFO, "%s", get_string("log_system_started"));
+    log_message(INFO, "%s", get_string("system_started"));
 }
 
 void log_message(log_level_t level, const char *format, ...) {
@@ -43,24 +41,12 @@ void log_message(log_level_t level, const char *format, ...) {
         log_start = (log_start + 1) % MAX_LOG_ENTRIES;
     }
     
-    // Mostrar no console se verbose mode estiver ativo
-    if (verbose_mode) {
-        const char* level_str[] = {"INFO", "WARN", "ERROR", "DEBUG"};
-        printf("[%s] %s: %s\n", log_buffer[index].timestamp, 
-               level_str[level], log_buffer[index].message);
-    }
-    
     va_end(args);
-}
-
-void toggle_verbose_mode() {
-    verbose_mode = !verbose_mode;
-    log_message(LOG_INFO, "%s", get_string("verbose_mode_status"));
 }
 
 void display_logs() {
     if (log_count == 0) {
-        print_with_color(get_color("foreground"), get_string("no_logs_available"));
+        print_with_color(get_color("foreground"), get_string("no_logs"));
         printf("\n");
         return;
     }
@@ -71,27 +57,29 @@ void display_logs() {
         // Map log levels to theme colors
         const char* level_color = get_color("foreground"); // Default
         switch (log_buffer[index].level) {
-            case LOG_INFO:
+            case INFO:
                 level_color = get_color("success"); // Verde
                 break;
-            case LOG_WARNING:
+            case WARN:
                 level_color = get_color("accent"); // Amarelo
                 break;
-            case LOG_ERROR:
+            case ERROR:
                 level_color = get_color("error"); // Vermelho
                 break;
-            case LOG_DEBUG:
+            case DEBUG:
                 level_color = get_color("foreground"); // Azul (using foreground for now)
                 break;
         }
         
         printf("[%s] ", log_buffer[index].timestamp);
         const char* level_str = 
-            log_buffer[index].level == LOG_INFO ? get_string("log_info") :
-            log_buffer[index].level == LOG_WARNING ? get_string("log_warn") :
-            log_buffer[index].level == LOG_ERROR ? get_string("log_error") : 
-            get_string("log_debug");
+            log_buffer[index].level == INFO ? get_string("info") :
+            log_buffer[index].level == WARN ? get_string("warn") :
+            log_buffer[index].level == ERROR ? get_string("error") : 
+            get_string("debug");
         print_with_color(level_color, level_str);
-        printf(": %s\n", log_buffer[index].message);
+        printf(": %s", log_buffer[index].message);
+        theme_reset();
+        printf("\n");
     }
 }

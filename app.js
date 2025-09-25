@@ -4,6 +4,8 @@ let isModified = false;
 let currentTheme = 'dark'; // Tema padrão
 let currentLanguage = 'pt_br'; // Idioma padrão
 let themes = {}; // Objeto para armazenar os temas
+let cursorPosition = 0; // Posição do cursor para persistência
+let selectedFileIndex = 0; // Índice do arquivo selecionado
 
 // Strings de tradução
 const translations = {
@@ -18,7 +20,27 @@ const translations = {
         'line': 'Linha',
         'column': 'Coluna',
         'total': 'Total',
-        'chars': 'chars'
+        'chars': 'chars',
+        'overview': 'Visão Geral',
+        'features': 'Novas Features',
+        'web_editor': 'Editor Web',
+        'source_code': 'Código Fonte',
+        'installation': 'Instalação',
+        'about': 'Sobre',
+        'mohavim_title': 'Mohavim 7.3 - Revolução Completa',
+        'new_version': 'O que há de novo na versão 7.3?',
+        'editor_description': 'Editor completamente renovado com sistema de internacionalização, temas customizáveis, logs internos e sistema de plugins dinâmicos!',
+        'internationalization': 'Internacionalização (i18n)',
+        'theme_system': 'Sistema de Temas',
+        'log_system': 'Sistema de Logs',
+        'plugin_system': 'Sistema de Plugins',
+        'file_saved': 'Arquivo salvo com sucesso',
+        'confirm_new_file': 'Arquivo modificado. Deseja salvar antes de criar um novo?',
+        'log_info': '✅ Info',
+        'log_warn': '⚠️ Aviso',
+        'log_error': '❌ Erro',
+        'log_debug': '🐛 Debug',
+        'log_demo': 'Esta é uma demonstração dos logs do sistema'
     },
     'en': {
         'theme': 'Theme',
@@ -31,7 +53,27 @@ const translations = {
         'line': 'Line',
         'column': 'Column',
         'total': 'Total',
-        'chars': 'chars'
+        'chars': 'chars',
+        'overview': 'Overview',
+        'features': 'New Features',
+        'web_editor': 'Web Editor',
+        'source_code': 'Source Code',
+        'installation': 'Installation',
+        'about': 'About',
+        'mohavim_title': 'Mohavim 7.3 - Complete Revolution',
+        'new_version': 'What\'s new in version 7.3?',
+        'editor_description': 'Completely renewed editor with internationalization system, customizable themes, internal logs and dynamic plugin system!',
+        'internationalization': 'Internationalization (i18n)',
+        'theme_system': 'Theme System',
+        'log_system': 'Log System',
+        'plugin_system': 'Plugin System',
+        'file_saved': 'File saved successfully',
+        'confirm_new_file': 'File modified. Do you want to save before creating a new one?',
+        'log_info': '✅ Info',
+        'log_warn': '⚠️ Warning',
+        'log_error': '❌ Error',
+        'log_debug': '🐛 Debug',
+        'log_demo': 'This is a demonstration of the system logs'
     }
 };
 
@@ -138,10 +180,22 @@ function initEditor() {
     textEditor.addEventListener('input', () => {
         updateEditorStatus();
         markAsModified();
+        saveCursorPosition();
     });
 
-    textEditor.addEventListener('click', updateEditorStatus);
-    textEditor.addEventListener('keyup', updateEditorStatus);
+    textEditor.addEventListener('click', () => {
+        updateEditorStatus();
+        saveCursorPosition();
+    });
+    textEditor.addEventListener('keyup', () => {
+        updateEditorStatus();
+        saveCursorPosition();
+    });
+    
+    // Restaurar posição do cursor quando carregar
+    setTimeout(() => {
+        restoreCursorPosition();
+    }, 100);
 
     // Botões da toolbar
     document.getElementById('new-file').addEventListener('click', () => {
@@ -197,21 +251,29 @@ function initEditor() {
             document.getElementById('load-file-btn').click();
         }
         // Adicionar mais atalhos de teclado
-        if (e.key === 'l' || e.key === 'L') {
-            // Simular funcionalidade de logs
-            alert('Visualização de logs não disponível na interface web');
-        }
         if (e.key === 't' || e.key === 'T') {
-            // Simular funcionalidade de temas
+            // Funcionalidade de temas
+            e.preventDefault();
             document.getElementById('theme-select').focus();
         }
         if (e.key === 'i' || e.key === 'I') {
-            // Simular funcionalidade de idiomas
-            alert('Seleção de idiomas não disponível na interface web');
+            // Funcionalidade de idiomas
+            e.preventDefault();
+            document.getElementById('language-select').focus();
+        }
+        if (e.key === 'l' || e.key === 'L') {
+            // Exibir logs do sistema
+            e.preventDefault();
+            displayLogs();
         }
         if (e.key === 'p' || e.key === 'P') {
             // Simular funcionalidade de plugins
-            alert('Gerenciamento de plugins não disponível na interface web');
+            e.preventDefault();
+            const t = translations[currentLanguage];
+            const message = currentLanguage === 'pt_br' ? 
+                'Gerenciamento de plugins disponível apenas no editor terminal. Use: ./src/mohavim --list-plugins' :
+                'Plugin management available only in terminal editor. Use: ./src/mohavim --list-plugins';
+            alert(message);
         }
     });
 
@@ -245,6 +307,85 @@ function initEditor() {
             }, 50);
         });
     }
+}
+
+// Função para salvar posição do cursor
+function saveCursorPosition() {
+    const textEditor = document.getElementById('text-editor');
+    if (textEditor) {
+        cursorPosition = textEditor.selectionStart;
+        saveCurrentSettings();
+    }
+}
+
+// Função para restaurar posição do cursor
+function restoreCursorPosition() {
+    const textEditor = document.getElementById('text-editor');
+    if (textEditor && cursorPosition > 0) {
+        textEditor.setSelectionRange(cursorPosition, cursorPosition);
+        textEditor.focus();
+    }
+}
+
+// Função para exibir logs com emojis
+function displayLogs() {
+    const t = translations[currentLanguage];
+    const logMessages = [
+        `[${new Date().toLocaleTimeString()}] ${t.log_info}: Sistema inicializado`,
+        `[${new Date().toLocaleTimeString()}] ${t.log_info}: Tema '${currentTheme}' carregado`,
+        `[${new Date().toLocaleTimeString()}] ${t.log_info}: Idioma '${currentLanguage}' aplicado`,
+        `[${new Date().toLocaleTimeString()}] ${t.log_debug}: ${t.log_demo}`,
+        `[${new Date().toLocaleTimeString()}] ${t.log_info}: Editor web funcionando corretamente`
+    ];
+    
+    const logContainer = document.createElement('div');
+    logContainer.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: ${themes[currentTheme]?.background || '#1a1a2e'};
+        color: ${themes[currentTheme]?.foreground || '#ffffff'};
+        border: 2px solid ${themes[currentTheme]?.accent || '#00ff88'};
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 80%;
+        max-height: 80%;
+        overflow-y: auto;
+        z-index: 10000;
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+    `;
+    
+    const header = document.createElement('h3');
+    header.textContent = currentLanguage === 'pt_br' ? 'Logs do Sistema' : 'System Logs';
+    header.style.cssText = `
+        margin: 0 0 15px 0;
+        color: ${themes[currentTheme]?.accent || '#00ff88'};
+        text-align: center;
+    `;
+    logContainer.appendChild(header);
+    
+    const logContent = document.createElement('div');
+    logContent.textContent = logMessages.join('\n');
+    logContainer.appendChild(logContent);
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = currentLanguage === 'pt_br' ? 'Fechar' : 'Close';
+    closeBtn.style.cssText = `
+        display: block;
+        margin: 15px auto 0;
+        padding: 8px 16px;
+        background: ${themes[currentTheme]?.accent || '#00ff88'};
+        color: ${themes[currentTheme]?.background || '#1a1a2e'};
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    `;
+    closeBtn.onclick = () => document.body.removeChild(logContainer);
+    logContainer.appendChild(closeBtn);
+    
+    document.body.appendChild(logContainer);
 }
 
 // Função para aplicar tema ao editor
@@ -752,10 +893,11 @@ function applyTheme(themeName) {
     console.log(`Tema '${themeName}' aplicado.`);
 }
 
-// Função para carregar o tema salvo
+// Função para carregar configurações salvas
 function loadSavedSettings() {
     const savedTheme = localStorage.getItem('mohavim-theme');
     const savedLanguage = localStorage.getItem('mohavim-language');
+    const savedCursorPosition = localStorage.getItem('mohavim-cursor-position');
     
     if (savedTheme && themes[savedTheme]) {
         currentTheme = savedTheme;
@@ -774,12 +916,18 @@ function loadSavedSettings() {
             languageSelect.value = currentLanguage;
         }
     }
+    
+    // Restaurar posição do cursor
+    if (savedCursorPosition) {
+        cursorPosition = parseInt(savedCursorPosition);
+    }
 }
 
 // Função para salvar as configurações atuais
 function saveCurrentSettings() {
     localStorage.setItem('mohavim-theme', currentTheme);
     localStorage.setItem('mohavim-language', currentLanguage);
+    localStorage.setItem('mohavim-cursor-position', cursorPosition.toString());
     
     // Atualizar os seletores na interface
     const themeSelect = document.getElementById('theme-select');
@@ -805,6 +953,38 @@ function applyLanguage() {
     
     if (themeLabel) themeLabel.textContent = t.theme + ':';
     if (languageLabel) languageLabel.textContent = t.language + ':';
+    
+    // Update navigation tabs
+    const overviewTab = document.querySelector('[data-tab="overview"]');
+    const featuresTab = document.querySelector('[data-tab="features"]');
+    const editorTab = document.querySelector('[data-tab="editor"]');
+    const sourceTab = document.querySelector('[data-tab="source"]');
+    const installTab = document.querySelector('[data-tab="install"]');
+    const aboutTab = document.querySelector('[data-tab="about"]');
+    
+    if (overviewTab) overviewTab.innerHTML = `<i class="fas fa-home"></i> ${t.overview}`;
+    if (featuresTab) featuresTab.innerHTML = `<i class="fas fa-star"></i> ${t.features}`;
+    if (editorTab) editorTab.innerHTML = `<i class="fas fa-edit"></i> ${t.web_editor}`;
+    if (sourceTab) sourceTab.innerHTML = `<i class="fas fa-code"></i> ${t.source_code}`;
+    if (installTab) installTab.innerHTML = `<i class="fas fa-download"></i> ${t.installation}`;
+    if (aboutTab) aboutTab.innerHTML = `<i class="fas fa-info-circle"></i> ${t.about}`;
+    
+    // Update main content headers
+    const mainTitle = document.querySelector('#overview h2');
+    if (mainTitle) mainTitle.innerHTML = `<i class="fas fa-rocket"></i> ${t.mohavim_title}`;
+    
+    const newVersionText = document.querySelector('.highlight-banner h3');
+    if (newVersionText) newVersionText.textContent = '🌟 ' + t.new_version;
+    
+    const editorDescription = document.querySelector('.highlight-banner p');
+    if (editorDescription) editorDescription.textContent = t.editor_description;
+    
+    // Update feature cards
+    const featureCards = document.querySelectorAll('.feature-card h3');
+    if (featureCards[0]) featureCards[0].textContent = t.internationalization;
+    if (featureCards[1]) featureCards[1].textContent = t.theme_system;
+    if (featureCards[2]) featureCards[2].textContent = t.log_system;
+    if (featureCards[3]) featureCards[3].textContent = t.plugin_system;
     
     // Update editor toolbar
     const newFileBtn = document.getElementById('new-file');
@@ -881,12 +1061,6 @@ document.addEventListener('keydown', function(e) {
     // Verificar se o foco não está em um campo de entrada
     if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
         switch(e.key) {
-            case 'l':
-            case 'L':
-                // Mostrar logs
-                alert('Visualização de logs não disponível na interface web');
-                e.preventDefault();
-                break;
             case 't':
             case 'T':
                 // Focar no seletor de temas

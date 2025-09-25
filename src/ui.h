@@ -12,4 +12,6 @@ void show_logs();
 void mostrar_menu_temas();
 void mostrar_menu_idiomas();
 
+void mostrar_menu_cursores();
+
 #endif

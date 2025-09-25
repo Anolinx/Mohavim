@@ -34,6 +34,8 @@ const char* get_language_from_config();
 void save_language_to_config(const char* language);
 const char* get_theme_from_config();
 void save_theme_to_config(const char* theme);
+int get_cursor_position_from_config();
+void save_cursor_position_to_config(int position);
 void verify_language_consistency();
 
 #endif

@@ -16,12 +16,10 @@ void show_help() {
     printf("%s\n", get_string("help_option"));
     printf("%s\n", get_string("lang_option"));
     printf("%s\n", get_string("theme_option"));
-    printf("%s\n", get_string("verbose_option"));
     printf("%s\n", get_string("install_plugin_option"));
     printf("%s\n", get_string("list_plugins_option"));
     printf("\n%s\n", get_string("examples"));
     printf("  mohavim --lang en --theme cyberpunk\n");
-    printf("  mohavim --verbose\n");
     printf("  mohavim --install-plugin myplugin\n");
 }
 
@@ -36,13 +34,13 @@ int main(int argc, char* argv[]) {
     const char* saved_language = get_language_from_config();
     if (saved_language != NULL) {
         load_language(saved_language);
-        log_message(LOG_INFO, "Idioma carregado da configuração: %s", saved_language);
+        log_message(INFO, get_string("language_loaded_from_config"), saved_language);
     }
     
     const char* saved_theme = get_theme_from_config();
     if (saved_theme != NULL) {
         load_theme(saved_theme);
-        log_message(LOG_INFO, "Tema carregado da configuração: %s", saved_theme);
+        log_message(INFO, get_string("theme_loaded_from_config"), saved_theme);
     }
 
     // Create an array to track which arguments have been processed
@@ -58,7 +56,7 @@ int main(int argc, char* argv[]) {
                 printf("%s '%s'\n", get_string("language_not_found"), argv[i]);
                 return 1;
             }
-            log_message(LOG_INFO, "Idioma alterado para: %s", argv[i]);
+            log_message(INFO, get_string("language_changed_to"), argv[i]);
             processed[i-1] = 1; // Mark --lang as processed
             processed[i] = 1;   // Mark language code as processed
         }
@@ -77,14 +75,11 @@ int main(int argc, char* argv[]) {
                 printf("%s '%s'\n", get_string("theme_not_found"), argv[i]);
                 return 1;
             }
-            log_message(LOG_INFO, "Tema alterado para: %s", argv[i]);
+            log_message(INFO, get_string("theme_changed_to"), argv[i]);
             processed[i-1] = 1; // Mark --theme as processed
             processed[i] = 1;   // Mark theme name as processed
         }
-        else if (strcmp(argv[i], "--verbose") == 0 || strcmp(argv[i], "-v") == 0) {
-            toggle_verbose_mode();
-            processed[i] = 1;   // Mark --verbose as processed
-        }
+        
         else if (strcmp(argv[i], "--install-plugin") == 0 && i + 1 < argc) {
             if (load_plugin(argv[++i])) {
                 printf("%s '%s'\n", get_string("plugin_installed"), argv[i]);
@@ -114,8 +109,8 @@ int main(int argc, char* argv[]) {
         mostrar_menu(opcao_atual);
         int tecla=ler_tecla();
         switch(tecla){
-            case 65: opcao_atual=(opcao_atual-1+9)%9; break;
-            case 66: opcao_atual=(opcao_atual+1)%9; break;
+            case 65: opcao_atual=(opcao_atual-1+10)%10; break;
+            case 66: opcao_atual=(opcao_atual+1)%10; break;
             case 10: restaurar_terminal();
                 switch(opcao_atual){
                     case 0: abrir_arquivo(); break;
@@ -123,10 +118,11 @@ int main(int argc, char* argv[]) {
                     case 2: buscar_arquivo(); break;
                     case 3: show_logs(); break;
                     case 4: mostrar_menu_temas(); break;
-                    case 5: mostrar_menu_idiomas(); break;
-                    case 6: manage_plugins_menu(); break;
-                    case 7: sobre(); break;
-                    case 8: printf("\033[2J\033[H🚪 Saindo...\n💀 Obrigado por usar o Mohavim!\n"); exit(0);
+                    case 5: mostrar_menu_cursores(); break;
+                    case 6: mostrar_menu_idiomas(); break;
+                    case 7: manage_plugins_menu(); break;
+                    case 8: sobre(); break;
+                    case 9: printf("\033[2J\033[H🚪 Saindo...\n💀 Obrigado por usar o Mohavim!\n"); exit(0);
                 }
                 configurar_terminal();
                 break;

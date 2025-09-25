@@ -28,4 +28,13 @@ void apply_theme_colors();
 void reset_colors();
 void print_with_color(const char* color, const char* text);
 
+// Funções para gerenciar cursor
+void set_cursor_type(int tipo);
+int get_cursor_type();
+char get_cursor_char();
+const char* get_cursor_glyph();
+
+// Função helper para reset e reaplicação de tema
+void theme_reset();
+
 #endif

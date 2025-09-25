@@ -32,11 +32,9 @@
   - Logs detalhados de operações
   - Buffer circular para mensagens
   - Visualização dentro do editor (tecla L)
+  - Categorias com emojis: ✅ Info, ⚠️ Warn, ❌ Error, 🐛 Debug
 
-🔧 **Modo Verbose**
-  - Logs detalhados opcionais
-  - Ativação via --verbose
-  - Debug avançado do sistema
+
 
 🔌 **Sistema de Plugins**
   - Carregamento dinâmico de plugins (.so)
@@ -66,14 +64,11 @@
   mohavim --theme light      # Tema claro
   mohavim --theme cyberpunk  # Tema cyberpunk
 
-# Modo verbose para debug
-  mohavim --verbose
-
 # Instalar plugin
   mohavim --install-plugin nome_do_plugin
 
 # Combinar argumentos
-  mohavim --lang en --theme cyberpunk --verbose
+  mohavim --lang en --theme cyberpunk
 ```
 
 ### Execução CLI
@@ -255,22 +250,13 @@ Logs detalhados de todas as operações:
 
 - **Buffer circular**: Armazena últimas mensagens
 - **Visualização interna**: Tecla L no editor
-- **Modo verbose**: Logs detalhados com --verbose
-- **Categorias**: Info, Warning, Error, Debug
+- **Categorias com emojis**: 
+  - ✅ Info: Informações gerais
+  - ⚠️ Warn: Avisos não críticos
+  - ❌ Error: Erros críticos
+  - 🐛 Debug: Debug detalhado (verbose)
 
-🔧 Modo Verbose
 
-Ative logs detalhados para desenvolvimento:
-
-```bash
-  mohavim --verbose
-```
-
-Mostra:
-- Carregamento de módulos
-- Operações de arquivo
-- Estados do editor
-- Erros detalhados
 
 Uso ⌨️
 
@@ -316,7 +302,6 @@ Changelog v7.3:
 - ✨ Sistema de internacionalização (i18n)
 - 🎨 Sistema de temas customizáveis
 - 📋 Sistema de logs interno
-- 🔧 Modo verbose para debug
 - 🔌 Sistema de plugins dinâmicos
 - 🌐 Interface multilíngue
 - ⚡ Arquitetura modular expandida

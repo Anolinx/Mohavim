@@ -47,10 +47,9 @@ if [ $? -eq 0 ]; then
         if command -v mohavim &> /dev/null; then
             echo "✅ Instalação verificada com sucesso!"
             echo ""
-            echo "📋 Exemplos de uso:"
-            echo "  mohavim                                 # Executar normalmente"
-            echo "  mohavim --lang pt --theme dark        # Com argumentos"
-            echo "  mohavim --verbose                     # Modo debug"
+            echo "  mohavim                              # Executar padrão"
+    echo "  mohavim --lang en --theme cyberpunk  # Idioma e tema"
+    echo "  mohavim --install-plugin myplugin    # Instalar plugin"
         else
             echo "⚠️ Aviso: Pode ser necessário reiniciar o terminal"
             echo "    ou adicionar /usr/local/bin ao seu PATH"

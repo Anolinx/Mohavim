@@ -75,6 +75,72 @@ const char* get_theme_from_config() {
     return NULL;
 }
 
+// Function to get cursor position from config file
+int get_cursor_position_from_config() {
+    FILE* config_file = fopen(".mohavimrc", "r");
+    if (config_file == NULL) {
+        // Try home directory config
+        char home_config[256];
+        char* home = getenv("HOME");
+        if (home != NULL) {
+            snprintf(home_config, sizeof(home_config), "%s/.mohavimrc", home);
+            config_file = fopen(home_config, "r");
+        }
+    }
+    
+    if (config_file != NULL) {
+        int cursor_pos = 0;
+        char line[256];
+        while (fgets(line, sizeof(line), config_file)) {
+            if (strncmp(line, "cursor_position=", 16) == 0) {
+                sscanf(line, "cursor_position=%d", &cursor_pos);
+                fclose(config_file);
+                return cursor_pos;
+            }
+        }
+        fclose(config_file);
+    }
+    return 0;
+}
+
+// Function to save cursor position to config file
+void save_cursor_position_to_config(int position) {
+    // Read existing config
+    FILE* config_file = fopen(".mohavimrc", "r");
+    char lines[100][256];
+    int line_count = 0;
+    int cursor_pos_found = 0;
+    
+    if (config_file != NULL) {
+        char line[256];
+        while (fgets(line, sizeof(line), config_file) && line_count < 99) {
+            if (strncmp(line, "cursor_position=", 16) == 0) {
+                snprintf(lines[line_count], sizeof(lines[line_count]), "cursor_position=%d\n", position);
+                cursor_pos_found = 1;
+            } else {
+                strcpy(lines[line_count], line);
+            }
+            line_count++;
+        }
+        fclose(config_file);
+    }
+    
+    // If cursor position not found, add it
+    if (!cursor_pos_found) {
+        snprintf(lines[line_count], sizeof(lines[line_count]), "cursor_position=%d\n", position);
+        line_count++;
+    }
+    
+    // Write back to file
+    config_file = fopen(".mohavimrc", "w");
+    if (config_file != NULL) {
+        for (int i = 0; i < line_count; i++) {
+            fputs(lines[i], config_file);
+        }
+        fclose(config_file);
+    }
+}
+
 // Function to save configuration to config file (JSON-like format)
 void save_config_to_file(const char* language, const char* theme) {
     // Try home directory config
@@ -134,13 +200,14 @@ void init_i18n() {
     add_language_string(0, "editor_title", "🖊️  MOHAVIM");
     add_language_string(0, "modified", "[MODIFICADO]");
     add_language_string(0, "saved", "[Salvo]");
-    add_language_string(0, "controls", "Ctrl+S:Salvar  Ctrl+Q:Sair  ESC:Menu  Ctrl+C:Copy  Ctrl+V:Paste  Ctrl+Z:Undo  ↑↓←→:Navegar");
+    add_language_string(0, "controls", "Ctrl+S:Salvar  ESC:Menu  ↑↓←→:Navegar");
     add_language_string(0, "line", "Linha:");
     add_language_string(0, "column", "Coluna:");
     add_language_string(0, "total", "Total:");
     add_language_string(0, "chars", "chars");
     add_language_string(0, "logs", "📋 Logs");
     add_language_string(0, "themes", "🎨 Temas");
+    add_language_string(0, "cursors", "🖱️ Cursores");
     add_language_string(0, "plugins", "🔌 Plugins");
     add_language_string(0, "settings", "⚙️ Configurações");
     add_language_string(0, "languages", "🌐 Idiomas");
@@ -150,7 +217,6 @@ void init_i18n() {
     add_language_string(0, "available_shortcuts", "Atalhos disponíveis:");
     add_language_string(0, "navigation_keys", "- ↑↓←→: Navegação");
     add_language_string(0, "save_shortcut", "- Ctrl+S: Salvar arquivo");
-    add_language_string(0, "exit_shortcut", "- Ctrl+Q: Sair do editor");
     add_language_string(0, "menu_shortcut", "- ESC: Voltar ao menu");
     add_language_string(0, "newline_shortcut", "- Enter: Nova linha");
     add_language_string(0, "delete_shortcut", "- Backspace: Deletar");
@@ -159,6 +225,11 @@ void init_i18n() {
     add_language_string(0, "light_theme", "Claro (Light)");
     add_language_string(0, "vaporwave_theme", "Vaporwave (Retro)");
     add_language_string(0, "vintage_theme", "Vintage (Clássico)");
+    add_language_string(0, "cursor_title", "🖱️  SELEÇÃO DE CURSOR");
+    add_language_string(0, "available_cursors", "Cursores disponíveis:");
+    add_language_string(0, "cursor_underscore", "Sublinhado (_)");
+    add_language_string(0, "cursor_pipe", "Barra (|)");
+    add_language_string(0, "cursor_block", "Bloco (█)");
     add_language_string(0, "available_languages", "Idiomas disponíveis:");
     add_language_string(0, "portuguese", "pt (Português)");
     add_language_string(0, "english", "en (English)");
@@ -206,8 +277,7 @@ void init_i18n() {
     add_language_string(0, "options", "Opções:");
     add_language_string(0, "help_option", "  --help, -h          Mostrar esta ajuda");
     add_language_string(0, "lang_option", "  --lang <código>     Definir idioma (pt_br, en)");
-    add_language_string(0, "theme_option", "  --theme <nome>      Definir tema (dark, light, cyberpunk)");
-    add_language_string(0, "verbose_option", "  --verbose, -v       Ativar modo verbose");
+    add_language_string(0, "theme_option", "  --theme <nome>      Definir tema (dark, light, vaporwave, vintage)");
     add_language_string(0, "install_plugin_option", "  --install-plugin <nome>  Instalar plugin");
     add_language_string(0, "list_plugins_option", "  --list-plugins      Listar plugins");
     add_language_string(0, "examples", "Exemplos:");
@@ -216,6 +286,10 @@ void init_i18n() {
     add_language_string(0, "env_var", "  1. Variável de ambiente: LANGUAGE=en ou LANG=en_US.UTF-8");
     add_language_string(0, "config_file", "  2. Arquivo de configuração: ~/.mohavimrc com 'language=en'");
     add_language_string(0, "cmd_line", "  3. Argumento de linha de comando: --lang en");
+    add_language_string(0, "cursor_position_saved", "Posição do cursor salva");
+    add_language_string(0, "cursor_position_loaded", "Posição do cursor carregada");
+    add_language_string(0, "no_files_in_directory", "📂 Nenhum arquivo encontrado no diretório atual.");
+    add_language_string(1, "no_files_in_directory", "📂 No files found in current directory.");
     
     language_count = 1;
     
@@ -234,13 +308,14 @@ void init_i18n() {
     add_language_string(1, "editor_title", "🖊️  MOHAVIM");
     add_language_string(1, "modified", "[MODIFIED]");
     add_language_string(1, "saved", "[Saved]");
-    add_language_string(1, "controls", "Ctrl+S:Save  Ctrl+Q:Quit  ESC:Menu  Ctrl+C:Copy  Ctrl+V:Paste  Ctrl+Z:Undo  ↑↓←→:Navigate");
+    add_language_string(1, "controls", "Ctrl+S:Save  ESC:Menu  ↑↓←→:Navigate");
     add_language_string(1, "line", "Line:");
     add_language_string(1, "column", "Column:");
     add_language_string(1, "total", "Total:");
     add_language_string(1, "chars", "chars");
     add_language_string(1, "logs", "📋 Logs");
     add_language_string(1, "themes", "🎨 Themes");
+    add_language_string(1, "cursors", "🖱️ Cursors");
     add_language_string(1, "plugins", "🔌 Plugins");
     add_language_string(1, "settings", "⚙️ Settings");
     add_language_string(1, "languages", "🌐 Languages");
@@ -250,7 +325,6 @@ void init_i18n() {
     add_language_string(1, "available_shortcuts", "Available shortcuts:");
     add_language_string(1, "navigation_keys", "- ↑↓←→: Navigation");
     add_language_string(1, "save_shortcut", "- Ctrl+S: Save file");
-    add_language_string(1, "exit_shortcut", "- Ctrl+Q: Exit editor");
     add_language_string(1, "menu_shortcut", "- ESC: Back to menu");
     add_language_string(1, "newline_shortcut", "- Enter: New line");
     add_language_string(1, "delete_shortcut", "- Backspace: Delete");
@@ -259,6 +333,11 @@ void init_i18n() {
     add_language_string(1, "light_theme", "Light");
     add_language_string(1, "vaporwave_theme", "Vaporwave (Retro)");
     add_language_string(1, "vintage_theme", "Vintage (Classic)");
+    add_language_string(1, "cursor_title", "🖱️  CURSOR SELECTION");
+    add_language_string(1, "available_cursors", "Available cursors:");
+    add_language_string(1, "cursor_underscore", "Underscore (_)");
+    add_language_string(1, "cursor_pipe", "Pipe (|)");
+    add_language_string(1, "cursor_block", "Block (█)");
     add_language_string(1, "available_languages", "Available languages:");
     add_language_string(1, "portuguese", "pt (Portuguese)");
     add_language_string(1, "english", "en (English)");
@@ -273,7 +352,7 @@ void init_i18n() {
     add_language_string(1, "file_nav_instructions", "Use ↑↓ to navigate, Enter to open, D to delete, ESC to go back");
     add_language_string(1, "previous_files", "... (%d previous files)");
     add_language_string(1, "remaining_files", "... (%d remaining files)");
-    add_language_string(1, "file_of", "Archive %d of %d");
+    add_language_string(1, "file_of", "File %d of %d");
     add_language_string(1, "filename_prompt", "Name: ");
     add_language_string(1, "delete_file_title", "🗑️ DELETE FILE");
     add_language_string(1, "confirm_delete", "Are you sure you want to delete the file:");
@@ -291,7 +370,7 @@ void init_i18n() {
     add_language_string(1, "filename_empty", "⚠️ Filename cannot be empty.");
     add_language_string(1, "search_text_empty", "⚠️ Not found.");
     add_language_string(1, "create_new_file_title", "📝 Create new file");
-    add_language_string(1, "filename_prompt_new", "Archive name: ");
+    add_language_string(1, "filename_prompt_new", "File name: ");
     add_language_string(1, "file_modified", "⚠️  File modified! Save before exit? (y/n): ");
     add_language_string(1, "save_before_exit", "⚠️  File modified! Save before exit? (y/n): ");
     add_language_string(1, "exiting", "🚪 Exiting...");
@@ -306,8 +385,7 @@ void init_i18n() {
     add_language_string(1, "options", "Options:");
     add_language_string(1, "help_option", "  --help, -h          Show this help");
     add_language_string(1, "lang_option", "  --lang <code>       Set language (pt_br, en)");
-    add_language_string(1, "theme_option", "  --theme <name>      Set theme (dark, light, cyberpunk)");
-    add_language_string(1, "verbose_option", "  --verbose, -v       Enable verbose mode");
+    add_language_string(1, "theme_option", "  --theme <name>      Set theme (dark, light, vaporwave, vintage)");
     add_language_string(1, "install_plugin_option", "  --install-plugin <name>  Install plugin");
     add_language_string(1, "list_plugins_option", "  --list-plugins      List plugins");
     add_language_string(1, "examples", "Examples:");
@@ -316,6 +394,10 @@ void init_i18n() {
     add_language_string(1, "env_var", "  1. Environment variable: LANGUAGE=en or LANG=en_US.UTF-8");
     add_language_string(1, "config_file", "  2. Configuration file: ~/.mohavimrc with 'language=en'");
     add_language_string(1, "cmd_line", "  3. Command line argument: --lang en");
+    add_language_string(0, "cursor_position_saved", "Posição do cursor salva");
+    add_language_string(1, "cursor_position_saved", "Cursor position saved");
+    add_language_string(0, "cursor_position_loaded", "Posição do cursor carregada");
+    add_language_string(1, "cursor_position_loaded", "Cursor position loaded");
     add_language_string(1, "plugin_system_started", "Plugin system started");
     add_language_string(0, "plugin_system_started", "Sistema de plugins iniciado");
     add_language_string(1, "max_plugins_reached", "Maximum plugin limit reached");
@@ -345,21 +427,59 @@ void init_i18n() {
     add_language_string(1, "run_plugin_option", "Run Plugin");
     add_language_string(0, "run_plugin_option", "Executar Plugin");
     
-    // Log translations
-    add_language_string(1, "log_system_started", "Log system started");
-    add_language_string(0, "log_system_started", "Sistema de logs iniciado");
-    add_language_string(1, "verbose_mode_status", "Verbose mode %s");
-    add_language_string(0, "verbose_mode_status", "Modo verbose %s");
-    add_language_string(1, "no_logs_available", "No logs available.");
-    add_language_string(0, "no_logs_available", "Nenhum log disponível.");
-    add_language_string(1, "log_info", "INFO");
-    add_language_string(0, "log_info", "INFO");
-    add_language_string(1, "log_warn", "WARN");
-    add_language_string(0, "log_warn", "WARN");
-    add_language_string(1, "log_error", "ERROR");
-    add_language_string(0, "log_error", "ERROR");
-    add_language_string(1, "log_debug", "DEBUG");
-    add_language_string(0, "log_debug", "DEBUG");
+    add_language_string(1, "system_started", "Log system started");
+    add_language_string(0, "system_started", "Sistema de logs iniciado");
+    add_language_string(1, "no_logs", "No logs available.");
+    add_language_string(0, "no_logs", "Nenhum log disponível.");
+    add_language_string(1, "no_logs", "No logs available.");
+    add_language_string(0, "info", "✅ Info");
+    add_language_string(1, "info", "✅ Info");
+    add_language_string(0, "warn", "⚠️ Aviso");
+    add_language_string(1, "warn", "⚠️ Warning");
+    add_language_string(0, "error", "❌ Erro");
+    add_language_string(1, "error", "❌ Error");
+    add_language_string(0, "debug", "🐛 Debug");
+    add_language_string(1, "debug", "🐛 Debug");
+    add_language_string(0, "system_started", "Sistema iniciado com sucesso");
+    add_language_string(1, "system_started", "System started successfully");
+    add_language_string(0, "files_loaded_in_dir", "Arquivos carregados no diretório atual");
+    add_language_string(1, "files_loaded_in_dir", "Files loaded in current directory");
+    add_language_string(0, "error_opening_dir", "Erro ao abrir diretório");
+    add_language_string(1, "error_opening_dir", "Error opening directory");
+    add_language_string(0, "starting_file_search", "Iniciando busca em arquivo");
+    add_language_string(1, "starting_file_search", "Starting file search");
+    add_language_string(0, "empty_filename_for_search", "Nome de arquivo vazio para busca");
+    add_language_string(1, "empty_filename_for_search", "Empty filename for search");
+    add_language_string(0, "empty_search_text", "Texto de busca vazio");
+    add_language_string(1, "empty_search_text", "Empty search text");
+    
+    // Plugin manager log messages
+    add_language_string(1, "plugin_system_started", "Plugin system started");
+    add_language_string(0, "plugin_system_started", "Sistema de plugins iniciado");
+    add_language_string(1, "max_plugins_reached", "Maximum plugin limit reached");
+    add_language_string(0, "max_plugins_reached", "Limite máximo de plugins atingido");
+    add_language_string(1, "plugin_already_loaded", "Plugin '%s' is already loaded");
+    add_language_string(0, "plugin_already_loaded", "Plugin '%s' já está carregado");
+    add_language_string(1, "error_loading_plugin", "Error loading plugin '%s': %s");
+    add_language_string(0, "error_loading_plugin", "Erro ao carregar plugin '%s': %s");
+    add_language_string(1, "plugin_no_init_func", "Plugin '%s' has no plugin_init function");
+    add_language_string(0, "plugin_no_init_func", "Plugin '%s' sem função plugin_init");
+    add_language_string(1, "plugin_loaded_success_log", "Plugin '%s' loaded successfully");
+    add_language_string(0, "plugin_loaded_success_log", "Plugin '%s' carregado com sucesso");
+    add_language_string(1, "plugin_unloaded_log", "Plugin '%s' unloaded");
+    add_language_string(0, "plugin_unloaded_log", "Plugin '%s' descarregado");
+    add_language_string(1, "plugin_not_found_log", "Plugin '%s' not found");
+    add_language_string(0, "plugin_not_found_log", "Plugin '%s' não encontrado");
+    
+    // Main.c log messages
+    add_language_string(1, "language_loaded_from_config", "Language loaded from configuration: %s");
+    add_language_string(0, "language_loaded_from_config", "Idioma carregado da configuração: %s");
+    add_language_string(1, "theme_loaded_from_config", "Theme loaded from configuration: %s");
+    add_language_string(0, "theme_loaded_from_config", "Tema carregado da configuração: %s");
+    add_language_string(1, "language_changed_to", "Language changed to: %s");
+    add_language_string(0, "language_changed_to", "Idioma alterado para: %s");
+    add_language_string(1, "theme_changed_to", "Theme changed to: %s");
+    add_language_string(0, "theme_changed_to", "Tema alterado para: %s");
     
     // File and editor translations
     add_language_string(1, "files_loaded_in_dir", "Files loaded in directory");
@@ -394,6 +514,42 @@ void init_i18n() {
     add_language_string(0, "file_delete_cancelled", "Operação de deleção de arquivo cancelada");
     add_language_string(1, "error_deleting_file_log", "Error deleting file '%s'");
     add_language_string(0, "error_deleting_file_log", "Erro ao deletar arquivo '%s'");
+    
+    // File and editor translations
+    add_language_string(1, "files_loaded_in_dir", "Files loaded in directory");
+    add_language_string(0, "files_loaded_in_dir", "%d arquivos carregados no diretório");
+    add_language_string(1, "error_opening_dir", "Error opening current directory");
+    add_language_string(0, "error_opening_dir", "Erro ao abrir diretório atual");
+    add_language_string(1, "starting_file_search", "Starting file search");
+    add_language_string(0, "starting_file_search", "Iniciando busca de arquivo");
+    add_language_string(1, "empty_filename_for_search", "Empty filename provided for search");
+    add_language_string(0, "empty_filename_for_search", "Nome de arquivo vazio fornecido para busca");
+    add_language_string(1, "empty_search_text", "Empty search text provided");
+    add_language_string(0, "empty_search_text", "Texto de busca vazio fornecido");
+    add_language_string(1, "searching_for_in_file", "Searching for '%s' in '%s'");
+    add_language_string(0, "searching_for_in_file", "Buscando por '%s' em '%s'");
+    add_language_string(1, "text_not_found_in_file", "Text '%s' not found in '%s'");
+    add_language_string(0, "text_not_found_in_file", "Texto '%s' não encontrado em '%s'");
+    add_language_string(1, "occurrences_found_in_file", "%d occurrence(s) of '%s' found in '%s'");
+    add_language_string(0, "occurrences_found_in_file", "%d ocorrência(s) de '%s' encontradas em '%s'");
+    add_language_string(1, "error_opening_file_for_search", "Error opening file '%s' for search");
+    add_language_string(0, "error_opening_file_for_search", "Erro ao abrir arquivo '%s' para busca");
+    add_language_string(1, "file_loaded", "File '%s' loaded (%zu bytes)");
+    add_language_string(0, "file_loaded", "Arquivo '%s' carregado (%zu bytes)");
+    add_language_string(1, "new_file_created", "New file '%s' created");
+    add_language_string(0, "new_file_created", "Novo arquivo '%s' criado");
+    add_language_string(1, "file_saved_success", "File '%s' saved successfully");
+    add_language_string(0, "file_saved_success", "Arquivo '%s' salvo com sucesso");
+    add_language_string(1, "error_saving_file", "Error saving file '%s'");
+    add_language_string(0, "error_saving_file", "Erro ao salvar arquivo '%s'");
+    add_language_string(1, "file_deleted_success", "File '%s' deleted successfully");
+    add_language_string(0, "file_deleted_success", "Arquivo '%s' deletado com sucesso");
+    add_language_string(1, "file_delete_cancelled", "File deletion cancelled");
+    add_language_string(0, "file_delete_cancelled", "Operação de deleção de arquivo cancelada");
+    add_language_string(1, "error_deleting_file_log", "Error deleting file '%s'");
+    add_language_string(0, "error_deleting_file_log", "Erro ao deletar arquivo '%s'");
+    add_language_string(1, "language_consistency_verified", "Language consistency verified successfully");
+    add_language_string(0, "language_consistency_verified", "Verificação de consistência de idioma concluída com sucesso");
     
     language_count = 2;
 }
@@ -507,7 +663,7 @@ void verify_language_consistency() {
     // Ensure current_language is within valid bounds
     if (current_language < 0 || current_language >= language_count) {
         current_language = 0; // Default to first language (Portuguese)
-        log_message(LOG_WARNING, "Idioma inválido, revertendo para padrão: %s", languages[0].code);
+        log_message(WARN, "Idioma inválido, revertendo para padrão: %s", languages[0].code);
     }
     
     // Verify that all required strings are present
@@ -516,7 +672,7 @@ void verify_language_consistency() {
         "navigate", "editor_title", "modified", "saved", "controls",
         "line", "column", "total", "chars", "logs", "themes", "plugins",
         "languages", "version", "language", "navigation", "available_shortcuts",
-        "navigation_keys", "save_shortcut", "exit_shortcut", "menu_shortcut",
+        "navigation_keys", "save_shortcut", "menu_shortcut",
         "newline_shortcut", "delete_shortcut", "available_themes", "dark_theme",
         "light_theme", "cyberpunk_theme", "vaporwave_theme", "vintage_theme",
         "available_languages", "portuguese", "english", "press_enter_back",
@@ -528,15 +684,15 @@ void verify_language_consistency() {
     for (size_t i = 0; i < sizeof(required_strings) / sizeof(required_strings[0]); i++) {
         const char* value = get_string(required_strings[i]);
         if (value == required_strings[i]) { // If key is returned, string is missing
-            log_message(LOG_WARNING, "String ausente para o idioma %s: %s", 
+            log_message(WARN, "String ausente para o idioma %s: %s", 
                        languages[current_language].code, required_strings[i]);
             missing_strings++;
         }
     }
     
     if (missing_strings > 0) {
-        log_message(LOG_WARNING, "Total de strings ausentes: %d", missing_strings);
+        log_message(WARN, "Total de strings ausentes: %d", missing_strings);
     } else {
-        log_message(LOG_INFO, "Verificação de consistência de idioma concluída com sucesso");
+        log_message(INFO, "%s", get_string("language_consistency_verified"));
     }
 }

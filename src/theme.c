@@ -6,6 +6,7 @@
 theme_t themes[MAX_THEMES];
 int theme_count = 0;
 int current_theme = 0;
+int cursor_tipo = 0; // 0: underscore (_), 1: pipe (|), 2: block (█)
 
 void init_themes() {
     theme_count = 0;
@@ -122,4 +123,38 @@ void print_with_color(const char* color, const char* text) {
     printf("%s%s\033[0m", color, text);
     printf("%s\033[K", themes[current_theme].background);
     fflush(stdout);
+}
+
+// Funções para gerenciar cursor
+void set_cursor_type(int tipo) {
+    if (tipo >= 0 && tipo <= 2) {
+        cursor_tipo = tipo;
+    }
+}
+
+int get_cursor_type() {
+    return cursor_tipo;
+}
+
+char get_cursor_char() {
+    switch (cursor_tipo) {
+        case 0: return '_';   // Underscore
+        case 1: return '|';   // Pipe  
+        case 2: return '#';   // Block - use special handling for █ in editor
+        default: return '_';
+    }
+}
+
+const char* get_cursor_glyph() {
+    switch (cursor_tipo) {
+        case 0: return "_";   // Underscore
+        case 1: return "|";   // Pipe  
+        case 2: return "█";   // Block - UTF-8 glyph
+        default: return "_";
+    }
+}
+
+// Função helper para reset e reaplicação de tema
+void theme_reset() {
+    printf("\033[0m%s%s", get_current_background(), get_current_foreground());
 }

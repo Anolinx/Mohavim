@@ -1,6 +1,0 @@
-        else if (strcmp(argv[i], "--install-plugin") == 0 && i + 1 < argc) {
-            if (load_plugin(argv[++i])) {
-                printf("%s '%s'\n", get_string("plugin_installed"), argv[i]);
-            }
-            return 0;
-        }
